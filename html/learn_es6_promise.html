@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>es6-promise</title>
+    </head>
+    <body>
+        <script>
+        
+            var promise=new Promise(
+                function(resolve,reject){
+                    console.log("-----异步调用开始------")
+                    if(true){
+                        resolve("异步调用成功");
+                    }else{
+                        reject("异步调用失败");
+                    }
+                }
+            );
+            promise.then((value) => {
+                console.log("-----------suc "+value)
+            }).catch(
+                (error) => {
+                    console.log("-----------err "+error)
+                }
+            )
+        </script>
+    </body>
+</html>

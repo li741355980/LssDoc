@@ -1,0 +1,7 @@
+1 卸载APK
+adb uninstall [apk包名]
+
+2 安装APK
+adb install [PC上的APK包路径]
+
+

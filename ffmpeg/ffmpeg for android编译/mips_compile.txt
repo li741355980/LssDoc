@@ -1,0 +1,38 @@
+In openSUSE 13.1, there's no mips-gcc-linux in the official repos.
+
+First step to get it to work, is adding the following repo from the open build service (under your own responsability - it's an unofficial repo with no guarantees):
+
+?http://download.opensuse.org/repositories/home:/duwe:/crosstools/openSUSE_13.1/
+
+If you want to build for hard float ABI, add the following repo in addition to the above:
+
+?http://download.opensuse.org/repositories/home:/klaussfreire:/crosstools/openSUSE_13.1/
+
+Afer adding these, install all required tools running the following
+
+$ sudo zypper in cross-mips-linux-binutils cross-mips-linux-gcc cross-mips-linux-glibc qemu-linux-user
+Or, for hard float builds:
+
+$ sudo zypper in cross-mips-linux-binutils cross-mips-linux-hf-gcc cross-mips-linux-hf-glibc qemu-linux-user
+In order to get a working build without hard-float, both dsp and hard float have to be disabled, and only use static builds - at the moment of this writing, simply specifying a library path to qemu-mips will result in a runaway process eating all system memory until killed by the OOM. The result is a very slow build, but functional enough to run fate tests:
+
+$ ./configure --target-os=linux --arch=mips --disable-mipsdspr1 --disable-mipsdspr2 --disable-mipsfpu \
+  --enable-cross-compile --cross-prefix=mips-linux- --target-exec=qemu-mips --prefix=/opt/cross \
+  --extra-ldflags=-static --ranlib=mips-linux-ranlib
+Otherwise configure with:
+
+$ ./configure --target-os=linux --arch=mips \
+  --enable-cross-compile --cross-prefix=mips-linux- --target-exec="qemu-mips -cpu 74Kf" --prefix=/opt/cross \
+  --extra-ldflags=-static --ranlib=mips-linux-ranlib
+Just in case, as a protection against the runaway-memory-eating bug, you may want to ulimit your shell (assuming you have 2G of RAM or more free):
+
+$ ulimit -v 2G
+And then build as usual.
+
+Running any cross-compiled tool is done like:
+
+$ qemu-mips -cpu 74Kf ffmpeg --help
+
+
+
+https://trac.ffmpeg.org/wiki/CompilationGuide/MIPS

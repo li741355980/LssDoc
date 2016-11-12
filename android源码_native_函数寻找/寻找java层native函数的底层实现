@@ -1,0 +1,2 @@
+大部分java层源码的底层实现映射都在   frameworks/base/core/jni下面的CPP文件里面，对应的CPP名字就是以包名作为命名的
+例如android.opengl.GLES20   ----->对应 android_opengl_GLES20.cpp

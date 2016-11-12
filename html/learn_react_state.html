@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React state!</title>
+    <!--react核心库-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react.min.js"></script>
+    <!--提供dom相关功能-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react-dom.min.js"></script>
+    <!--将jsx语法转换为js语法-->
+    <script src="http://static.runoob.com/assets/react/browser.min.js"></script>
+  </head>
+  <body>
+        <div id="targetdiv"></div>
+        <script type="text/babel">
+           var LikeButton = React.createClass({
+            getInitialState: function() {//设置状态liked的初始状态
+                return {liked: false};
+            },
+            handleClick: function(event) {
+                this.setState({liked: !this.state.liked});//liked状态改变，改变之后会自动调用ｒｅｎｄｅｒ
+            },
+            render: function() {
+                var text = this.state.liked ? 'like' : 'haven\'t liked';
+                return (
+                  <p onClick={this.handleClick}>
+                    You {text} this. Click to toggle.
+                  </p>
+                );
+            }
+           });
+
+        var Input = React.createClass({
+          getInitialState: function() {
+            return {value: 'Hello!'};
+          },
+          handleChange: function(event) {
+            this.setState({value: event.target.value});
+          },
+          render: function () {
+            var value = this.state.value;
+            return (
+              <div>
+                <input type="text" value={value} onChange={this.handleChange} />
+                <p>{value}</p>
+              </div>
+            );
+          }
+        });
+        
+        ReactDOM.render(
+                <div>
+                    <LikeButton />
+                    <Input/>
+                </div>,
+              document.getElementById('targetdiv')
+            );
+        </script>
+    </body>
+</html>

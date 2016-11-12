@@ -1,0 +1,23 @@
+
+def dlPath = '/sdcard/DynamicLoadHost'
+def upload = { ->
+    try {
+        exec {
+            commandLine android.adbExe, 'shell', 'mkdir', dlPath
+        }
+    }
+    catch (ignored) {
+    }
+
+    exec {
+        commandLine android.adbExe, 'push', project.name + '-debug.apk', dlPath
+        workingDir project.projectDir.toString() + '/build/outputs/apk/'
+    }
+
+}
+
+task uploadDebug << {
+    upload()
+}
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CSS学习</title>
+        <!--以下是一个内部样式表 注意，内部样式表要放在head内-->
+         <!--CSS规则按照    selector { property1:value;property2:value;}  格式编写-->
+        <style>
+            /*这是CSS里面的注释*/
+            body {background-color:yellow;}
+            h1   {font-size:36pt;}
+            h2   {color:blue;}
+            p    {
+                    margin-left:50px;
+                    text-align: center;
+                    color: green;
+                    font-family: monospace;
+                 }
+            /*以下是一个ID选择器，为具有id id_style的元素制定样式 */
+            #id_style{
+                background-color: aqua;
+                color: #FF0000;
+            }
+            /*以下是一个Class选择器，与Id选择器不同在于，他可以应用与多个元素 */
+            .class_style{
+                background-color: royalblue;
+                color: #00FF00;
+            }
+            p.only_class_style{
+                color: #OF00FF00;
+            }
+        </style>
+    </head>
+    
+    <body style="background-color:white;">
+        <h1>一级标题采用内联属性</h1>
+        <h2>二级标题采用内联属性</h2>
+        <p style="color:red;margin-left:20px;">使用内联样式的段落，覆盖了内联样式的某些属性</p>
+        <p id="id_style">使用id选择器的段落</p>
+        <p class="class_style">使用class选择器的段落1</p>
+        <p class="class_style">使用class选择器的段落2</p>
+        
+        <p class="only_class_style">使用特定class选择器的段落</p>
+        <h1 class="only_class_style">使用了特定为p元素的Class选择器的标题，将不受影响</h1>
+        <p>一般而言，所有的样式会根据下面的规则层叠于一个新的虚拟样式表中，其中数字 4 拥有最高的优先权。
+        <br>
+            1 浏览器缺省设置<br>
+            2 外部样式表<br>
+            3 内部样式表（位于 &lt;head&gt; 标签内部）<br>
+            4 内联样式（在 HTML 元素内部）</p>
+    </body>
+</html>

@@ -1,0 +1,103 @@
+Android用OpenGL ES2.0显示YUV数据，在手机上需要两种坐标系的解决方案
+
+如题 ，不知道大家看懂了这个题目没有，给个链接：http://blog.csdn.net/wangchenggggdn/article/details/8896453（下称链接①），
+
+里面评论有很多人提到了这个问题，我也是其中一员，但是问遍了所有人，自己也发帖（http://bbs.csdn.net/topics/390769358）
+
+寻求解决方案，却终究没能得到一个可用的方案。
+
+
+从2014年4月中旬遇到这个问题，纠结了两个多星期，终于在看了好多好多资料之后，于4月的最后一个周一，暂时解决了这么个问题。
+
+距离那时候已经快3个月了，由于这段时间我留下的qq邮箱，不小心泄露了我的那么一点点信息偷笑，也有好几个网友加我q问我这个问题，
+
+索性我就再倒回来写一篇文章解释一下，这也算是我在csdn上面正儿八经的第一篇原创blog，一字一句出自我手。
+
+
+废话不多说，正文来了：
+
+自从参考链接①做了yuv显示之后，坐标问题就一直存在，下面两组坐标系就是罪魁祸首，
+
+///////////////////// 米2S、华为 等//////////////////////////
+	GLfloat squareVertices_zero[] = {
+		0.0f,	1.0f,
+		1.0f,	1.0f,
+		0.0f,	0.0f,
+		1.0f,	0.0f,
+	};
+	GLfloat coordVertices_zero[] = {
+		-1.0f,	-1.0f,
+		 1.0f,	-1.0f,
+		-1.0f,	 1.0f,
+		 1.0f,	 1.0f,
+	};
+
+////////////////////// 红米、台电pad、kindle pad、SS_SCH-1939D等//////////////////////////
+	GLfloat squareVertices_one[] = {
+		-1.0f,	-1.0f,
+		 1.0f,	-1.0f,
+		-1.0f,	 1.0f,
+		 1.0f,	 1.0f,
+	};
+
+	GLfloat coordVertices_one[] = {
+		0.0f,	1.0f,
+		1.0f,	1.0f,
+		0.0f,	0.0f,
+		1.0f,	0.0f,
+	};
+
+
+最终在无奈之下，病急乱投医，每找到个资料就好好的看看，终于被这篇（http://guide.eoeandroid.com/#OpenGL）文章中的几个大字“OpenGL 版本与设备兼容性”  给深深的吸引住了。于是多投入了一些眼神。。哈哈！
+
+然后自己再通过获取不同设备的OpenGL扩展名来看，发现了一些不算规律的规律。。。
+
+
+问题从此变得明朗了，解决方案如下：
+
+第一步：在createSurfaceView的时候，判断应该使用哪种坐标系：
+
+char *glExtension = NULL;
+glExtension = glGetString(GL_EXTENSIONS);
+if(strstr(glExtension, "GL_AMD_compressed_ATC_texture") != NULL)
+{
+//	LOGD("===%s===", strstr(glExtension, "GL_AMD_compressed_ATC_texture"));
+	Vertex_Texture_Index = 0;
+}
+else
+{
+//	LOGE("===%s===", strstr(glExtension, "GL_AMD_compressed_ATC_texture"));
+	Vertex_Texture_Index = 1;
+}
+
+当然，那个“GL_AMD_compressed_ATC_texture”只不过是我自己选择来判断的条件，你也可以根据自己的观察自己来选 一个扩展名作为判断
+
+
+第二步：在render的时候选择纹理坐标系
+
+	if(Vertex_Texture_Index == 0)
+	{
+		glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices_zero);  // 2：2个数字表示一个坐标
+		glEnableVertexAttribArray(ATTRIB_VERTEX);
+
+
+		glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, 0, 0, coordVertices_zero);
+		glEnableVertexAttribArray(ATTRIB_TEXTURE);
+	}
+	else if(Vertex_Texture_Index == 1)
+	{
+		glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices_one);  // 2：2个数字表示一个坐标
+		glEnableVertexAttribArray(ATTRIB_VERTEX);
+
+
+		glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, 0, 0, coordVertices_one);
+		glEnableVertexAttribArray(ATTRIB_TEXTURE);
+	}
+
+
+至此，在我这儿就算是解决了这个问题了。特此写出来，希望能提供一些帮助给有需要的人
+
+
+当然，我自己也不是很确定那个扩展名到底能不能完全的兼容所有设备，所以。。
+
+以后要是哪位朋友还有更好的解决办法，烦请告知！！！

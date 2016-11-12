@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React life!</title>
+    <!--react核心库-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react.min.js"></script>
+    <!--提供dom相关功能-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react-dom.min.js"></script>
+    <!--将jsx语法转换为js语法-->
+    <script src="http://static.runoob.com/assets/react/browser.min.js"></script>
+  </head>
+  <body>
+        <div id="targetdiv"></div>
+        <script type="text/babel">
+            
+    var Hello = React.createClass({
+        /*组件的生命周期分成三个状态：
+        Mounting：已插入真实 DOM
+        Updating：正在被重新渲染
+        Unmounting：已移出真实 DOM
+        React 为每个状态都提供了两种处理函数，will 函数在进入状态之前调用，did 函数在进入状态之后调用，三种状态共计五种处理函数。
+        
+
+        componentWillMount()
+        componentDidMount()
+        componentWillUpdate(object nextProps, object nextState)
+        componentDidUpdate(object prevProps, object prevState)
+        componentWillUnmount()
+
+
+        */
+        
+      getInitialState: function () {
+        return {
+          opacity: 1.0
+        };
+      },
+
+      componentDidMount: function () {
+        this.timer = setInterval(function () {
+          var opacity = this.state.opacity;
+          opacity -= .05;
+          if (opacity < 0.1) {
+            opacity = 1.0;
+          }
+          this.setState({
+            opacity: opacity
+          });
+        }.bind(this), 100);
+      },
+
+      render: function () {
+          //下面的style属性需要两个大括号，因为 React 组件样式是一个对象，所以第一重大括号表示这是 JavaScript 语法，第二重大括号表示样式对象。
+        return (
+          <div style={{opacity: this.state.opacity}}>
+            Hello {this.props.name}
+          </div>
+        );
+      }
+    });
+
+    ReactDOM.render(
+      <Hello name="world"/>,
+      document.getElementById('targetdiv')
+    );
+
+        </script>
+    </body>
+</html>

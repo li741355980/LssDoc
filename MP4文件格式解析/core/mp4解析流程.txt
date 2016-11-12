@@ -1,0 +1,40 @@
+
+2-1.计算电影图像宽度和高度
+        tkhd – track header atom中找到宽度和高度即是。
+2-2. 计算电影声音采样频率
+        从tkhd – track header atom 中找出audio track 的time scale 即是声音的采样频率。
+2-3. 计算视频帧率
+        首先计算出整部电影的duration，和帧的数目然后   帧率=整部电影的duration / 帧的数目
+2-4. 计算电影的比特率
+        整部电影的尺寸除以长度，即是比特率，此电影的比特率为846623/70= 12094 bps
+
+2-5. 查找sample
+        当播放一部电影或者一个track的时候，对应的media handler 必须能够正确的解析数据流，对一定的时间获取对应的媒体数据。如果是视频媒体，media handler 可能会解析多个atom，才能找到给定时间的sample 的大小和位置。具体步骤如下：
+        1．确定时间，相对于媒体时间坐标系统
+        2．检查time-to-sample atom来确定给定时间的sample 序号。
+        3．检查sample-to-chunk atom来发现对应该sample 的chunk。
+        4．从chunk offset atom中提取该trunk 的偏移量。
+        5．利用sample size atom找到sample在trunk 内的偏移量和sample 的大小。例如，如果要找第1 秒的视频数据，过程如下：
+        5-1． 第1秒的视频数据相对于此电影的时间为600
+        5-2． 检查time-to-sample atom，得出每个sample 的duration 是40，从而得出需要寻找第600/40= 15 + 1 = 16 个sample
+        5-3． 检查sample-to-chunk atom，得到该sample 属于第5 个chunk 的第一个sample，该chunk 共有4 个sample
+        5-4． 检查chunk offset atom找到第5 个trunk 的偏移量是20472
+        5-5． 由于第16个sample 是第5 个trunk 的第一个sample，所以不用检查sample size atom，trunk 的偏移量即是该sample 的偏移量20472。如果是这个trunk 的第二个sample，则从samplesize atom 中找到该trunk 的前一个sample 的大小，然后加上偏移量即可得到实际位置。
+        5-6． 得到位置后，即可取出相应数据进行解码，播放
+
+2.6. 查找关键帧
+        查找过程与查找sample的过程非常类似，只是需要利用sync sample atom 来确定key frame 的sample 序号
+        1. 确定给定时间的sample序号
+        2. 检查sync sample atom来发现这个sample序号之后的key frame
+        3. 检查sample-to-chunk atom来发现对应该sample 的chunk
+        4. 从chunk offset atom中提取该trunk的偏移量
+        5. 利用sample size atom找到sample在trunk 内的偏移量和sample 的大小
+ 
+2.7. Random access
+        Seeking 主要是利用sample table box 里面包含的子box 来实现的，还需要考虑edit list 的影响。可以按照以下步骤seek 某一个track 到某个时间T，注意这个T 是以movie header box 里定义的time scale 为单位的：
+        1.如果track有一个edit list，遍历所有的edit，找到T 落在哪个edit 里面。将Edit开始时间变换为以movie time scale 为单位，得到EST，T 减去EST，得到T'，就是在这个edit里面的duration，注意此时T'是以movie 的timescale 为单位的。然后将T'转化成track媒体的time scale，得到T''。T''与Edit 的开始时间相加得到以track 媒体的time scale 为单位的时间点T'''。
+        2.这个track 的time-to-sample 表说明了该track 中每个sample 对应的时间信息，利用这个表就可以得到T'''对应的sample NT。
+        3.sample NT 可能不是一个random access point，这样就需要其他表的帮助来找到最近的random access point。一个表是sync sample 表，定义哪些sample 是random access point。使用这个表就可以找到指定时间点最近的sync sample。如果没有这个表，就说明所有的sample 都是synchronization points，问题就变得更容易了。另一个shadowsync box 可以帮助内容作者定义一些特殊的samples，它们不用在网络中传输，但是可以作为额外的random access point。这就改进了random access，同时不会影响正常的传输比特率。这个表指出了非random access point 和random access point 之间的关系。如果要寻找指定sample 之前最近的shadow sync sample，就需要查询这个表。总之，利用sync sample 和shadow sync 表，就可以seek 到NT 之前的最近的accesspoint sample Nap。
+        4.找到用于access point 的sample Nap 之后，利用sample-to-chunk 表来确定sample 位于哪个chunk 内。
+        5. 找到chunk 后，使用chunk offset 找到这个chunk 的开始位置。
+        6. 使用sample-to-chunk 表和sample size 表中的数据，找到Nap 在此chunk 内的位置，再加上此chunk 的开始位置，就找到了Nap 在文件中的位置。

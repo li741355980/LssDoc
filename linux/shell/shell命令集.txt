@@ -1,0 +1,362 @@
+1 获取字符串长度
+
+string="abcd"
+echo ${#string} #输出 4
+
+2 提取子字符串
+
+string="runoob is a great site"
+echo ${string:1:4} # 输出 unoo
+
+3 查找子字符串 
+
+string="runoob is a great company"
+echo `expr index "$string" is`  # 输出 8
+
+4 数组
+
+定义：array_name=(value0 value1 value2 value3)
+赋值：array_name[n]=valuen #可以不使用连续的下标，而且下标的范围没有限制。 
+读取：valuen=${array_name[n]}
+查长度：length=${#array_name[@]}
+
+
+将字符串分割成数组
+a="one,two,three,four"
+OLD_IFS="$IFS" 
+IFS="," 
+arr=($a) 
+IFS="$OLD_IFS" 
+for s in ${arr[@]} 
+do 
+    echo "$s" 
+done
+
+#注意IFS存储着分隔符 我们先获取默认分隔符，然后再设置为"，"使用完毕后要恢复
+
+5 shell参数 $n
+
+echo "执行的文件名：$0";
+echo "第一个参数为：$1";
+echo "第二个参数为：$2";
+echo "第三个参数为：$3";
+
+$@ $*都表示所有参数,但也稍有不同
+$#表示参数数量
+
+例如 test.sh 1 2 3
+那么$@为"1" "2" "3"
+而  $*  为"1 2 3"
+
+
+6 算数运算
+
++	`expr $a + $b`
+-	`expr $a - $b`
+*	`expr $a \* $b`
+/	`expr $b / $a`
+%	`expr $b % $a`
+=	a=$b
+==	[ $a == $b ] 相等返回true
+!=	[ $a != $b ] 不相等返回true
+
+7 关系运算符
+
+相等(==)	-eq	[ $a -eq $b ]
+不等(!=)	-ne	[ $a -ne $b ]
+大于(>)		-gt	[ $a -gt $b ]
+小于(<)		-lt	[ $a -lt $b ]
+大等于(>=)	-ge	[ $a -ge $b ]
+小等于(<=)	-le	[ $a -le $b ] 
+
+8 布尔运算
+
+非	!	[ ! false ]
+或	-o	[ $a -lt 20 -o $b -gt 100 ] 
+且	-a	[ $a -lt 20 -a $b -gt 100 ]
+
+9 逻辑运算
+
+逻辑与	&&	[[ $a -lt 100 && $b -gt 100 ]]
+逻辑或	||	[[ $a -lt 100 || $b -gt 100 ]]
+
+10 字符串运算
+
+相等	=	[ $str1 = $str2 ]
+不等	!=	[ $str1 != $str2 ]
+长度是否为0	-z 	[ -z $str ]
+适度是否不为0	-n	[ -n &str ]
+是否为空		[ $a ]
+
+11 文件测试
+
+是否是块设备文件	-b	[ -b $file ]
+是否是字符设备文件	-c	[ -c $file ]
+是否是目录		-d	[ -d $file ]
+是否是普通文件		-f	[ -f $file ]
+是否设置了SGID位	-g	[ -g $file ]
+是否设置了粘着位	-k	[ -k $file ]
+是否是具名管道		-p	[ -p $file ]
+是否设置了SUID位	-u	[ -u $file ]
+是否可读		-r	[ -r $file ]
+是否可写		-w	[ -w $file ]
+是否可执行		-x	[ -x $file ]
+大小是否大于0		-s	[ -s $file ]
+是否存在		-e	[ -e $file ]
+
+
+12 分支判读
+
+if condition
+then
+    	command1 
+    	command2
+    	...
+    	commandN
+else
+	Command
+fi
+---------------------------------
+if condition1
+then
+	command1
+elif condition2 
+then 
+	command2
+else
+	commandN
+fi
+
+
+13 循环
+
+for var in item1 item2 ... itemN
+do
+    	command1
+    	command2
+    	...
+	commandN
+done
+
+
+for var   #这种形式默认遍历的传入参数列表，如果此循环再函数中就是遍历函数参数，在shell脚本中就是遍历shell脚本参数
+do 
+	command
+done
+-------------------------------
+while condition	#while 循环只有条件为真才执行一系列命令。
+do
+	Command
+done
+------------------------------
+until condition  #until循环执行一系列命令直至条件为真时停止。 
+do
+	Command
+done
+------------------------------
+case 值 in
+模式1)
+    command1
+    command2
+    ...
+    commandN
+;;
+模式2）
+    command1
+    command2
+    ...
+    commandN
+;;
+esac
+++++++++++++++++++++++++++++++
+echo '输入 1 到 4 之间的数字:'
+echo '你输入的数字为:'
+read aNum
+case $aNum in
+    1)  echo '你选择了 1'		# 用 )来进行条件选择
+    	;;				# 每一种分支条件执行到;;结束
+    2)  echo '你选择了 2'
+    	;;
+    3)  echo '你选择了 3'
+    	;;
+    4)  echo '你选择了 4'
+    	;;
+    *)  echo '你没有输入 1 到 4 之间的数字'	#其他条件用*捕获
+	;;
+esac
+
+14 函数
+
+[ function ] funname [()]
+{
+
+    action;
+
+    [return int;]
+}
+
+例如：
+funWithParam(){				#省略了function关键字
+    echo "第一个参数为 $1 !"
+    echo "第二个参数为 $2 !"		#参数捕获$1是参数1 $2是参数2 等等		
+    echo "第十个参数为 $10 !"
+    echo "第十个参数为 ${10} !"
+    echo "第十一个参数为 ${11} !"
+    echo "参数总数有 $# 个!"
+    echo "作为一个字符串输出所有参数 $* !"
+}
+funWithParam 1 2 3 4 5 6 7 8 9 34 73
+funWithReturn(){
+    echo "这个函数会对输入的两个数字进行相加运算..."
+    echo "输入第一个数字: "
+    read aNum
+    echo "输入第二个数字: "
+    read anotherNum
+    echo "两个数字分别为 $aNum 和 $anotherNum !"
+    return $(($aNum+$anotherNum))
+}
+funWithReturn
+echo "输入的两个数字之和为 $? !"	#函数返回值在调用该函数后通过 $? 来获得。 
+
+
+15 双引号 单引号 倒引号
+
+1）双引号和单引号都是字符串，区别在于双引号可以引用变量可以出现转义字符，单引号会将其区间所有的都变成字符串
+shuang="path:$NDK"
+echo $shuang
+dan="path:$NDK"
+echo $dan
+输出：
+path:/home/lss/ndk/
+path:$NDK
+
+2) 倒引号
+到引号括起来的字符串被解释为命令行,shell会先执行该命令行，然后以整个标准输出结果取代倒引号部分
+curdate=`date`
+
+
+16 管道线
+管道线是由竖杠（|）隔开的若干命令组成的序列，例如
+	ls -l $HOME  | wc -l
+管道线每一个命令执行都有一个独立进程，前一个命令的输出是下一个命令的输入。
+
+
+
+文件操作命令
+1 cd
+	切换目录
+2 ls
+	查看当前目录下的文件
+3 pwd
+	查看当前绝对路径
+4 mkdir
+	创建目录
+5 touch
+	创建文件
+6 rm
+	删除目录或者文件
+7 cp
+	复制文件 cp /tmp/1.txt /root/2.txt        cp -r /tmp/1 /root/2
+8 mv
+	移动文件 mv /tmp/1.txt /root/2.txt        mv -r /tmp/1 /root/2
+
+
+文本输出
+1 echo
+	向标准输出输出字符串  如echo fdklsjfljf
+2 cat
+	输出文件内容 如 cat 1.txt
+技巧：
+多行输出文本
+cat<<EOF
+	JFDKLFSF
+	JSLFJKSLFJSL
+	FDSJKFLSJLK
+EOF
+	
+修改或者删除已有变量
+
+1 ${变量名#匹配字串}		从头向后开始匹配，删除符合匹配字串的最短数据
+2 ${变量名##匹配字串}		从头向后开始匹配，删除符合匹配字串的最长数据
+3 ${变量名%匹配字串}		从尾向前开始匹配，删除符合匹配字串的最短数据
+4 ${变量名%%匹配字串}		从尾向前开始匹配，删除符合匹配字串的最长数据
+5 ${变量名/旧的字串/新的字串}	将符合旧字串的第一个字串替换为新的字串
+6 ${变量名//旧的字串/新的字串}	将符合旧字串的全部字串替换为新的字串
+
+如
+	var="this is a string"
+	echo $var
+	echo ${var#*is}
+	echo ${var##*s}
+	echo ${var%is*}
+	echo ${var%%s*}
+	echo ${var/is/is not} 
+	echo ${var//s/k}
+
+
+高级应用
+1 eval
+	对命令参数进行处理之后，再次运行命令
+如：
+1）
+	x="hello eval"
+	y="x"
+	echo $y		#显示x
+	eval echo $y	#显示hello eval
+2）
+	x="1.txt"
+	y=x
+	eval cat \$$y	#等价于cat 1.txt   eval进行参数处理之后命令变为cat $x
+
+
+2 grep
+在文本文件中检索所有指定模式的词或短语，并返回在文件中所有搜索到的 行
+
+grep [选项] 查找模式 [文件1，文件2，文件3]
+重要选项：
+	-E 将查找模式解释成正则表达式   grep -E 可以等同于egrep命令
+	-F 将查找模式解释成单纯字符串	grep -F 可以等同于fgrep命令
+	-r 递归查询子目录下的文件
+	-i 匹配的时候忽略大小写
+	-n 输出匹配到的行的行号
+grep -n 'ndk.dir' ./local.properties
+grep -E '*\.dir' ./local.properties
+
+3 cut
+剪切数据，以 行 为单位
+cut [option] files
+-d 指定分隔符 默认是TAB键
+-f 指定需要选取的字段的下标 
+-c 以字符为单位分割 指定需要选取的字符的下标 
+-b 以字节为单位分割 指定需要选取的字节的下标 
+
+提取下标有以下几种类型：
+N：只取第N项
+N-：从第N项一直到行尾
+N-M：从第N项到第M项（包括M项）
+-M：从第一项到第M项（包括M项）
+-：从第一项开始到结束的所有项
+
+echo a:b:c:d | cut -d ':' -f 2  	#b
+
+echo a:b:c:d | cut -d ':' -f 2-3  	#b:c
+
+echo a:b:c:d | cut -d ':' -f 2-		#b:c:d
+
+echo a:b:c:d | cut -c 2			#:
+
+echo a:b:c:d | cut -c 2-3		#:b
+
+这个操作符还可以这么用
+var = `grep ndk.dir local.properties | cut -d '=' -f 2`
+var_arr = (`grep ndk.dir local.properties | cut -d '=' -f 2`) #转换成数组
+
+
+有时候我们需要在某一个包含很多子目录的目录中搜索查找包含某个文本内容的文本，我们可以在grep中加上 -r选项让grep命令迭代进入子目录查找。同时在命令最后加上代表文件通配符的*号，不然grep会一直等待输入
+    grep -r "查找文本内容" *  
+
+
+
+
+
+

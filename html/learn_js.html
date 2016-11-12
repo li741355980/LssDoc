@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>js学习</title>
+        <script src="extra.js">
+            //src可以指定引用的外部js,但是切记要单独一个script标签引入，这个标签不能再加入js代码
+        </script>
+        <script >
+            
+            //在html中插入js必须在script标签之中
+            var innerInt=1;
+            function onBtnClick(){
+                var localInt=200;
+                innerInt++;//innerInt是全局变量，每调用一次都会加1
+                extraInt++;//extraInt是全局变量，每调用一次都会加1
+                localInt++;//extraInt是局部变量，每次调用一次都是201
+                window.alert("js函数弹出对话框 "+innerInt+" "+extraInt+" "+localInt);
+                console.log("在浏览器控制台输出信息 "+" inner "+innerInt+" extra "+extraInt+" local "+localInt);//浏览器按F12进调试模式，在调试窗口中可以看到输出
+            }
+            function onBtnClick1(){
+                document.getElementById("targetp")//通过document对象获取Element 对象
+                .innerHTML="点击后";//使用innerHTML可以改变HTML元素文字
+                document.getElementById("targetbtn")
+                .innerHTML="点击后";
+            }
+            function onBtnClick2(){
+                document.write("<h1>标题</h1>");
+                document.write("<p>段落</p>");
+            }
+        </script>
+    </head>
+    
+    <body>
+       <script>
+            //body中的script 将直接被执行
+            document.write("<h1>这是使用js写入的标题</h1>");
+            document.write("<p>这是使用js写入的段落</p>");
+           
+           person.fight("jay");
+        </script>
+        <button type="button" onclick="alert('弹出对话框提示')">点击直接弹出对话框</button><br>
+        <button type="button" onclick="onBtnClick()">点击调用js响应接口</button><br>
+        <button id="extratargetbtn" type="button" onclick="extraonclick()">点击调用外部js响应接口</button><br>
+        <p id="targetp">没有点击</p>
+        <button id="targetbtn" type="button" onclick="onBtnClick1()">点击后文字改变</button><br>
+        <button type="button" onclick="onBtnClick2()">点击后HTML内容改变</button><br>
+        <a href="learn_js_object.html">转到js object</a><br>
+        <a href="learn_js_closure.html">转到js closure</a>
+        <p>按F12查看调试信息</p>
+    </body>
+</html>

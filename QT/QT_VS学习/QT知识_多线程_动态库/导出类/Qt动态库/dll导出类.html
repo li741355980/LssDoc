@@ -1,0 +1,1920 @@
+<!--STATUS OK-->
+
+<html><head><meta http-equiv=content-type content="text/html; charset=gb2312"><title>转贴  dll导出类_听雨轩      </title>
+
+<style type="text/css">
+
+.error{color:#FF0000;font-size:12px}
+
+
+
+
+
+	
+
+
+
+
+
+</style>
+
+<script type="text/javascript" src="/ui/scripts/global.js"></script>
+
+<script language="javascript" src="/js/popup.js"></script>
+
+<script type="text/javascript" src="/ui/scripts/CommentEditor/BdEditor-mined.js?v=2.3"></script>
+
+<script LANGUAGE="JavaScript" src="/js/g_spjs.js"></script>
+
+<script language="javascript">
+
+<!--
+
+
+(function(){var A=109;function C(D){var F="nslog__"+(new Date()).getTime();var E=window[F]=new Image();E.onload=(E.onerror=function(){window[F]=null});E.src="http://nsclick.baidu.com/v.gif?pid="+A+"&url="+encodeURIComponent(D)+"&type=0&_t="+Math.random();E=null}function B(F){F=F||event;var E=F.srcElement||F.target;if(E.nodeType!=1){E=E.parentNode}while(E&&E.tagName&&E.tagName.toUpperCase()!="A"){E=E.parentNode}if(E&&E.tagName&&E.tagName.toUpperCase()=="A"){if(E.protocol.indexOf("http")==0&&!/^([\w-]+\.)*?baidu\.com/i.test(E.host)){var D=E.href;setTimeout(function(){C(D)},1)}}E=null}if(document.attachEvent){document.attachEvent("onmousedown",B);window.attachEvent("onunload",function(){document.detachEvent("onmousedown",B)})}else{document.addEventListener("mousedown",B,false);window.addEventListener("unload",function(){document.removeEventListener("mousedown",B,false)},false)}})();
+
+var allkey="";
+
+var i=0;
+
+var flag=0;
+
+function setpv(allnum)
+
+{
+
+	var num = allnum.split('_');
+
+	document.getElementById("result").innerHTML=num[0];
+
+}
+
+
+
+function checkMail(s)
+
+{
+
+  	var pattern=/\w+@\w+\.[a-z]+/;
+
+  	if(pattern.test(s))
+
+    {
+
+       return true;
+
+    }
+
+  	else
+
+   {
+
+      return false;
+
+   }
+
+}
+
+
+
+
+
+function checkeandu(eanduid)
+
+{
+
+	var eanduvalue=G(eanduid).value;
+
+	var len=bytes(eanduvalue);
+
+	if(len>128)
+
+	{
+
+		showErr(2,"您输入的网址或邮箱太长，请保持在128字节以内。");
+
+		return false;
+
+	}
+
+	else
+
+	{
+
+		 return true;
+
+	}
+
+
+
+}
+
+
+
+function cmtdel(str)
+
+{
+
+	var pop=new Popup({ contentType:3,isReloadOnClose:false,width:340,height:80});
+
+	pop.setContent("title","删除评论");
+
+	pop.setContent("confirmCon","您确定要彻底删除这条评论吗？");
+
+	pop.setContent("callBack",delCallback2);
+
+	pop.setContent("parameter",{fid:str,popup:pop});
+
+	pop.build();
+
+	pop.show();
+
+	return false;
+
+}
+
+function delCallback2(para)
+
+{
+
+	var o_pop=para["popup"];
+
+	o_pop.config.contentType=1;
+
+	o_pop.setContent("contentUrl","");
+
+	o_pop.reBuild();
+
+	G(para["fid"]).target=o_pop.iframeIdName;
+
+	eval("document."+para["fid"]).submit();
+
+}
+
+
+
+String.prototype.byteLength = function() {
+
+    return this.replace(/[^\u0000-\u007f]/g,"\u0061\u0061").length;
+
+}
+
+
+
+function checkname(strid)
+
+{
+
+	var ele=document.getElementById(strid);
+
+	var len=bytes(ele.value);
+
+	if(len>49)
+
+	{
+
+		showErr(1,"您输入的姓名太长，请保持在49字节以内。");
+
+		return false;
+
+	}
+
+	else
+
+	{
+
+		if(len==0)
+
+		{
+
+			document.getElementById(strid).value="匿名网友";
+
+		}
+
+		 return true;
+
+	}
+
+
+
+}
+
+
+
+function checktext(textid)
+
+{
+
+        var tempStr='';
+
+        var isLightFont=false;
+
+		if(editor&&textid=="spBlogCmtText"){
+
+			//document.getElementById("spBlogCmtText").value=editor.getHtml();
+
+			tempStr=editor.getHtml();
+
+			tempStr=tempStr.replace(/<span style="filter:glow\(color=#([0-9a-z]{3,6}),strength=2\);height:0px;color:#([0-9a-z]{3,6})">/ig,'');
+
+			tempStr=tempStr.replace(/<\/span>/ig,'');
+
+			document.getElementById("spBlogCmtText").value=tempStr;
+
+            isLightFont=!(tempStr==editor.getHtml());
+
+        }
+
+		document.getElementById(textid).value=trimlr(textid);
+
+		var str=trimrn(textid);
+
+		len=str.length;
+
+		if(len==0 || ((/^[\s,　]+$/gi).test(str)) )
+
+		{
+
+			showErr(3,"您必须输入评论内容，请检查。");
+
+			return false;
+
+		}
+
+		else
+
+        {
+
+                len=str.byteLength();
+
+                var maxLength=isLightFont?916:1000;
+
+				if(len > maxLength)
+
+				{
+
+					showErr(3,"您输入的评论内容太长，请保持在500字以内。");
+
+					return false;
+
+				}
+
+				if(editor&&textid=="spBlogCmtText"){
+
+					document.getElementById("spBlogCmtText").value=editor.getHtml();
+
+					document.getElementById(textid).value=trimlr(textid);
+
+				}
+
+
+
+			return true;
+
+		}
+
+}
+
+
+
+function showErr(index,str)
+
+{
+
+	G(index+"_err").style.display="";
+
+	G(index+"_err_con").innerHTML=str;
+
+}
+
+function hidErr(index)
+
+{
+
+	G(index+"_err").style.display="none";
+
+	G(index+"_err_con").innerHTML="";
+
+}
+
+
+
+function alertPop(tit,con)
+
+{
+
+	var pop=new Popup({ contentType:4,isReloadOnClose:false,width:340,height:80});
+
+	pop.setContent("title",tit);
+
+	pop.setContent("alertCon",con);
+
+	pop.build();
+
+	pop.show();
+
+}
+
+
+
+function cmtfull()
+
+{
+
+	var cnum=0;
+
+	if(cnum>=50000)
+
+	{
+
+		alertPop("发表评论","单篇日志评论数最多为50000条.");
+
+		return false;
+
+	}
+
+	else
+
+	{
+
+		return true;
+
+	}
+
+}
+
+
+
+function checkcmtform()
+
+{
+
+	if(checkname("spBlogCmtor")&&checkeandu("spBlogCmtURL")&&checktext("spBlogCmtText")&&cmtfull())
+
+	{
+
+		submitForm();
+
+		return true;
+
+	}
+
+	else
+
+	{
+
+		return false;
+
+	}
+
+}
+
+
+
+var g_pop=null;
+
+function submitForm()
+
+{
+
+	g_pop=new Popup({ contentType:1,isReloadOnClose:false,width:340,height:80});
+
+	g_pop.setContent("title","添加评论");
+
+	g_pop.setContent("contentUrl","");
+
+	g_pop.setContent("someDisabledBtn","btn_ok");
+
+	g_pop.build();
+
+	G("popFormSubmit").target=g_pop.iframeIdName;
+
+	g_pop.show();
+
+}
+
+
+
+function g_close_pop()
+
+{
+
+	g_pop.close();
+
+}
+
+
+
+function formatonlinpic()
+
+{
+
+var picobj=document.getElementsByName("onlinepic");
+
+var picnum=picobj.length;
+
+
+
+	for(var i=0;i<picnum;i++)
+
+	{
+
+		if(picobj[i].width>200)
+
+		{
+
+			picobj[i].width=200;
+
+		}
+
+		if(picobj[i].height>200)
+
+		{
+
+			picobj[i].height=200;
+
+		}
+
+	}
+
+    try{document.getElementById("btn_ok").disabled = "";}catch(e){}
+
+}
+
+
+
+function addToFavor(){
+
+var blogTitle='转贴  dll导出类'.replace(/&#39;/g,'\'');
+
+window.open('http://cang.baidu.com/do/add?it='+encodeURIComponent(blogTitle+'_百度空间')+'&iu='+encodeURIComponent(location.href)+'&fr=sp#nw=1','_s','scrollbars=no,width=600,height=450,right=75,top=20,status=no,resizable=yes');
+
+return false;
+
+}
+
+
+
+var isIE = /*@cc_on!@*/false;
+
+function tracker(did,a){
+
+	return function(){
+
+		var t=new Date().getTime();
+
+		var href=a.href;
+
+        if(isIE){
+
+            var r = /href\s*=\s*("|')?([^\s]*)\1/gi;
+
+            if(r.test(a.outerHTML))
+
+                href = RegExp.$2;
+
+        }
+
+        new Image().src = "http://hi.baidu.com/sys/statlog/1.gif?m=" + did + "&v=" + encodeURIComponent(href) + "&c=" + encodeURIComponent(location.href) + "&t="+t;
+
+	}
+
+}
+
+
+
+function tracker_init(did){
+
+	var _s=document.getElementById(did);
+
+	var as = _s.getElementsByTagName('A');
+
+	for(var i = 0, j = as.length; i < j; i ++){
+
+		var a = as[i];
+
+		if(isIE){
+
+			a.attachEvent("onclick", tracker(did,a));
+
+		}else{
+
+			a.addEventListener("click", tracker(did,a), false);
+
+		}
+
+	}
+
+}
+
+
+
+
+
+/* some functions for cmt-reply */
+        var g_cmtorInfo = [];
+        function goCmtReply(cmtPorID){
+            cmtreply(g_cmtorInfo[cmtPorID],cmtPorID);
+        }
+		function cmtreply(cmtName,cmtPorID)
+
+		{
+
+			cmtName=cmtName.replace(/<|>/g,"");
+
+			window.location.hash="#send";
+
+			var cmtForm=document.form1;
+
+			cmtForm.cm.value="3";
+
+			if(!cmtForm.spReferTarget)
+
+			{
+
+				var ipt=document.createElement("input");
+
+				ipt.type="hidden";
+
+				ipt.name="spReferTarget";
+
+				ipt.value=cmtPorID;
+
+				cmtForm.appendChild(ipt);
+
+			}else cmtForm.spReferTarget.value=cmtPorID;
+
+
+
+
+
+			 //G("reTitle").innerHTML="回复"+cmtName+"：";
+
+			 G("cancleReLink").style.display="";
+
+			 cmtForm.btn_ok.value="回复评论";
+
+
+
+
+
+			 try{
+
+				editor.window.focus();
+
+                editor.window.document.body.innerHTML="回复"+cmtName+"：";
+
+
+
+                var w = editor.window;
+
+				if(w.getSelection){
+
+					var d = w.document;
+
+					var s = w.getSelection();
+
+					var r = d.createRange();
+
+					r.setStartAfter(d.body.firstChild);
+
+					r.setEndAfter(d.body.lastChild);
+
+					s.removeAllRanges();
+
+					s.addRange(r);
+
+				}
+
+			}catch(e){
+
+			 		try{
+
+				 		cmtForm.getElementsByTagName("textarea")[0].focus();
+
+				 		cmtForm.getElementsByTagName("textarea")[0].value="回复"+cmtName+"：";
+
+				 	}catch(e){}
+
+			}
+
+		}
+
+
+
+		function canclereply()
+
+		{
+
+			var cmtForm=document.form1;
+
+			cmtForm.cm.value="1";
+
+			try{cmtForm.removeChild(cmtForm.spReferTarget);}catch(e){}
+
+			/*
+
+			try{
+
+					var cmt=cmtForm.getElementsByTagName("textarea")[0]
+
+					cmt.value="";
+
+					cmt.focus();
+
+			}catch(e){}
+
+			*/
+
+
+
+			try{
+
+					var ed=editor.window.document.body;
+
+					ed.innerHTML="";
+
+					editor.window.focus();
+
+				}catch(e){
+
+					var cmt=cmtForm.getElementsByTagName("textarea")[0];
+
+					cmt.value="";
+
+					cmt.focus();
+
+			}
+
+
+
+			G("cancleReLink").style.display="none";
+
+			cmtForm.btn_ok.value="发表评论";
+
+		}
+
+
+
+		function gotoreply()
+
+		{//to checking whether reply cmt
+
+			if( window.location.hash.indexOf("&re=1")<0) return;
+
+			var cmtID=window.location.hash.split("&")[0].replace("#","");
+
+			var cmtlinks=document.getElementsByTagName("a");
+
+			for(var i=0,n=cmtlinks.length;i<n;i++)
+
+			{
+
+				if(cmtlinks[i].name==cmtID){ var rename=cmtlinks[i].getAttribute("rename");  repid=cmtlinks[i].getAttribute("repid"); break;}
+
+			}
+
+			if(typeof(rename)!="undefined"){
+
+				cmtreply(rename, repid);
+
+			}
+
+		}
+
+
+
+//-->
+
+</script>
+
+
+<script type="text/javascript">
+
+    /*<![CDATA[*/
+
+
+
+window.onerror=function(){return true;}
+
+
+
+var RelatedDocData = null, GetAndEval = false;
+
+(function(){
+
+	var xhr = BdAjax.getXHR();
+
+	if(xhr == null){
+
+		RelatedDocData = -1;
+
+		return;
+
+	}
+
+
+
+	xhr.open("GET", "/sys/search?type=8&word=%D7%AA%CC%F9%20%20dll%B5%BC%B3%F6%C0%E0&item=6fb39e3d29387706bba1673b&t=" + new Date().getTime(), true);
+
+	xhr.onreadystatechange = function(){
+
+		if(xhr.readyState == 4){
+
+			if(xhr.status == 0 || xhr.status == 200){
+
+				if(GetAndEval){
+
+					eval(xhr.responseText);
+
+				}else{
+
+					RelatedDocData = xhr.responseText;
+
+				}
+
+			}
+
+		}
+
+	}
+
+	xhr.send(null);
+
+})();
+
+/*]]>*/
+
+</script>
+
+
+
+</head>
+
+<body onLoad="formatonlinpic();">
+
+<center>
+
+<script type="text/javascript">
+/*<![CDATA[*/
+if(top.location != self.location){
+	top.location = self.location;
+}
+var myref = encodeURIComponent("http://hi.baidu.com/tiemsn/blog/item/6fb39e3d29387706bba1673b%2Ehtml");
+/*]]>*/
+</script>
+<link rel="stylesheet" type="text/css" href="/ui/css/mods.css" />
+
+<link rel="stylesheet" type="text/css" href="/tiemsn/css/item/805e29343d9b033b5bb5f510.css" />
+
+<link rel="stylesheet" type="text/css" href="/space.css" />
+<style type="text/css">
+/*<![CDATA[*/
+
+#usrbar{padding:4px 10px 3px 0;font-size:12px;height:19px;line-height:19px;color:#000000;font-family:Arial;text-align:right;background:#ffffff;filter:alpha(opacity=65);-moz-opacity:0.5;width:auto !important;width:100%;letter-spacing:normal}
+#usrbar a,#usrbar a:link,#usrbar a:visited{color:#0000CC;text-decoration:underline}
+#ft{clear:both;height:20px;line-height:20px;color:#666666;font-size:12px;font-family:Arial;text-align:center}
+#ft a,#ft a:link,#ft a:visited{color:#7777CC;text-decoration:underline}
+#usrbar,#usrbar a,#usrbar a:link,#usrbar a:visited,#ft,#ft a,#ft a:link,#ft a:visited{letter-spacing:normal}
+/*]]>*/
+</style>
+
+
+
+<div id="usrbar"><nobr>
+
+			<a id="hi_index" href="http://hi.baidu.com" target="_blank">百度空间</a>&nbsp;|&nbsp;<a href="http://www.baidu.com/" target="_blank">百度首页</a>&nbsp;<script type="text/javascript">
+		document.write('| <a href="https://passport.baidu.com/?login&tpl=sp&tpl_reg=sp&u=http://hi.baidu.com' + encodeURIComponent('/tiemsn/blog/item/6fb39e3d29387706bba1673b%2Ehtml') + '">登录</a>');
+		</script>
+		
+</nobr></div>
+
+
+
+	
+
+
+
+
+<script type="text/javascript">
+
+function set_cookie_4_bdtip(index/* start from one */, value){
+	var bdtip = document.cookie.match(/(^| )BDTIP=([^;]*)(;|$)/);
+	if(!bdtip){
+		bdtip=new Array(index);
+		for(var i=0,n=bdtip.length;i<n;i++)
+		{
+			if(bdtip[i]=="" || bdtip[i]==null)  bdtip[i]=0;
+			if(i == index - 1){
+				bdtip[i] = value;
+			}
+		}
+	}else{
+	bdtip = bdtip[2].split('-');
+	if(index > bdtip.length)  bdtip.length= index;
+	for(var i = 0, j = bdtip.length; i < j; i ++){
+		if(bdtip[i]=="" || bdtip[i]==null) bdtip[i]=0;
+		if(i == index - 1){
+			bdtip[i] = value;
+		}
+	}
+	}
+	bdtip = bdtip.join('-');
+	document.cookie = "BDTIP=" + bdtip+ ";expires=Wed, 28-Nov-37 01:45:46 GMT;path=/;";
+}
+</script>
+
+<div id="main" align="left">
+
+<!--[if IE]>
+<script>
+var objmain = document.getElementById("main");
+function updatesize(){ var bodyw = window.document.body.offsetWidth; if(bodyw <= 790) objmain.style.width="772px"; else if(bodyw >= 1016) objmain.style.width="996px"; else objmain.style.width="100%"; }
+updatesize(); window.onresize = updatesize;
+</script>
+<![endif]-->
+
+	<div id="header">
+
+	<div class="lc"><div class="rc"></div></div>
+<div class="tit"><a href="/tiemsn" class="titlink" title="tiemsn的空间 http://hi.baidu.com/tiemsn">听雨轩</a></div>
+<div class="desc"></div>
+<div id="tabline">&nbsp;</div>
+
+	<div id="tab"><a href="/tiemsn">主页</a><a href="/tiemsn/blog" class="on">博客</a><a href="/tiemsn/album">相册</a><span>|</span><a href="/tiemsn/profile">个人档案</a>
+
+	<span>|</span><a href="/tiemsn/friends">好友</a>
+
+
+
+
+
+
+
+	</div>
+
+</div>
+
+
+
+<div class="stage">
+
+<div class="stagepad">
+
+<div style="width:100%">
+
+
+
+
+
+	
+
+
+
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="modth">
+
+	<tr><td class="modtl" width="7">&nbsp;</td>
+
+	<td class="modtc" nowrap><div class="modhead"><span class="modtit">查看文章</span></div></td>
+
+	<td class="modtc" nowrap align="right"></td>
+
+	<td class="modtr" width="7">&nbsp;</td>
+
+	</tr></table>
+
+
+
+<div id="m_blog" class="modbox" style="overflow-x:hidden;">
+
+<div class="tit">转贴  dll导出类</div>
+
+<div class="date">2008-09-18  17:11</div>
+
+<table style="table-layout:fixed;width:100%"><tr><td><div id="blog_text" class="cnt"  ><div class="cnt" >
+<div><strong><font size="3">1、 DLL的概念</font></strong><br>
+DLL(Dynamic Linkable Library)，动态链接库，可以向程序提供一些函数、变量或类。这些可以直接拿来使用。<br>
+静态链接库与动态链接库的区别：<br>
+（1）静态链接库与动态链接库都是共享代码的方式。静态链接库把最后的指令都包含在最终生成的EXE文件中了；动态链接库不必被包含在最终EXE文件中，EXE文件执行时可以&ldquo;动态&rdquo;地引用和卸载这个与EXE独立的DLL文件。<br>
+（2） 静态链接库中不能再包含其他的动态链接库或者静态库，而在动态链接库中还可以再包含其他的动态或静态链接库。<br>
+动态链接库的分类：Visual C++支持三种DLL，它们分别是Non-MFC DLL（非MFC动态库）、MFC Regular DLL（MFC规则DLL）、MFC Extension DLL（MFC扩展DLL）。非MFC动态库不采用MFC类库结构，其导出函数为标准的C接口，能被非MFC或MFC编写的应用程序所调用；MFC规则DLL 包含一个继承自CWinApp的类，但其无消息循环；MFC扩展DLL采用MFC的动态链接版本创建，它只能被用MFC类库所编写的应用程序所调用。<br>
+<strong><font size="3">2、 创建一个DLL</font></strong><br>
+<font size="2"><strong>2.1 非MFC的DLL</strong></font><br>
+2.1.1声明导出函数：<br>
+extern &ldquo;C&rdquo; __declspec(dllexport) int add(int a, int b);<br>
+其中 extern &ldquo;C&rdquo;为声明为C编译。由于C++编译器在编译的时候会造成其函数名的该变，在其他应用程序中导致函数不可调用，而C编译器则不会在编译后改变其函数名。这样如果用C编译的程序来调用该dll中的函数时，可能会造成找不到该函数。<br>
+__declspec（dllexport）表示该函数为DLL输出函数，即其他应用程序可以调用该函数<br>
+从dll中声明输出函数有两种方式：<br>
+（1） 另外一种方式是采用模块定义(.def) 文件声明，.def文件为链接器提供了有关被链接程序的导出、属性及其他方面的信息。<br>
+（2） 用__declspec(dllexport)来声明函数<br>
+如果使用Visual C++来创建dll，对于同样用VC创建的exe来说，调用dll没有什么问题。而如果用其他工具来创建的exe来调用dll，就会出现问题。因为即使你不用C++编译器，Microsoft C编译器也会损害C函数。当用__stdcall将函数输出时，C编译器会将函数改为<a href="mailto:_func@1">_func@1</a>的形式。在这里需要在.def文件中加入EXPORTS节来输出函数：<br>
+EXPORTS<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> func<br>
+这样，dll将用func函数名来输出函数。<br>
+另一种方式是用#pragma (linker, &ldquo;/exports:func=_func@1&rdquo;),告诉编译器输出函数func，这种方式没有前一种好。<br>
+如果通过VC++编写的DLL欲被其他语言编写的程序调用，应将函数的调用方式声明为__stdcall方式，WINAPI都采用这种方式，而C/C++ 缺省的调用方式却为__cdecl。__stdcall方式与__cdecl对函数名最终生成符号的方式不同。若采用C编译方式(在C++中需将函数声明为extern &quot;C&quot;)，__stdcall调用约定在输出函数名前面加下划线，后面加&ldquo;@&rdquo;符号和参数的字节数，形如<a href="mailto:_functionname@number">_functionname@number</a>；而__cdecl调用约定仅在输出函数名前面加下划线，形如_functionname。<br>
+; lib.def : 导出DLL函数</div>
+<div>LIBRARY dllTest</div>
+<div>EXPORTS</div>
+<div>add @ 1</div>
+<div>.def文件的规则为：<br>
+　　(1)LIBRARY语句说明.def文件相应的DLL；<br>
+　　(2)EXPORTS语句后列出要导出函数的名称。可以在.def文件中的导出函数名后加@n，表示要导出函数的序号为n（在进行函数调用时，这个序号将发挥其作用）；<br>
+　　(3).def 文件中的注释由每个注释行开始处的分号 (;) 指定，且注释不能与语句共享一行。<br>
+　　由此可以看出，例子中lib.def文件的含义为生成名为&ldquo;dllTest&rdquo;的动态链接库，导出其中的add函数，并指定add函数的序号为1。</div>
+<div><font size="2"><strong>2.1.2 Dll的调用方式：</strong></font> <wbr></wbr> <wbr></wbr> <wbr></wbr><br>
+DLL的调用分为两种方式：动态和静态<br>
+（1） 动态调用：typedef int(*lpAddFun)(int, int); //宏定义函数指针类型<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> lpAddFun add;//函数指针<br>
+HINSTANCE hDll=LoadLibrary(&ldquo;path&rdquo;);<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> add=(lpAddFun)GetProcAddress(hDll, &quot;add&quot;);//获得dll中的add函数指针<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> FreeLibrary(hDll);<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> 在从dll调用中返回的函数、指针或者类都是以指针的方式会的，即返回的是函数、变量或类的地址。这里一定要注意，不能简单的用函数名来赋值。<br>
+（2） 静态调用：将生成的.dll和.lib文件拷入到调用dll的工程中，用命令<br>
+ <wbr></wbr> <wbr></wbr> #pragma comment(lib,&quot;dllTest.lib&quot;)，实现静态调用，即把该dll在编译的时候也编译到exe文件中去，而后在工程中调用时用下面的代码：<br>
+#pragma comment(lib,&quot;dllTest.lib&quot;)</div>
+<div>//.lib文件中仅仅是关于其对应DLL文件中函数的重定位信息</div>
+<div>extern &quot;C&quot; __declspec(dllimport) add(int x,int y);</div>
+<div>int main(int argc, char* argv[])</div>
+<div>{</div>
+<div>int result = add(2,3);</div>
+<div>printf(&quot;%d&quot;,result);</div>
+<div>return 0;</div>
+<div>}</div>
+<div>　　由上述代码可以看出，静态调用方式的顺利进行需要完成两个动作：</div>
+<div>　　(1)告诉编译器与DLL相对应的.lib文件所在的路径及文件名，#pragma comment(lib,&quot;dllTest.lib&quot;)就是起这个作用。<br>
+　　程序员在建立一个DLL文件时，连接器会自动为其生成一个对应的.lib文件，该文件包含了DLL 导出函数的符号名及序号（并不含有实际的代码）。在应用程序里，.lib文件将作为DLL的替代文件参与编译。<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> 另外一种显式调用的方式是设置vc中的目录和includefiles来实现<br>
+　　(2)声明导入函数，extern &quot;C&quot; __declspec(dllimport) add(int x,int y)语句中的__declspec(dllimport)发挥这个作用。<br>
+　　静态调用方式不再需要使用系统API来加载、卸载DLL以及获取DLL中导出函数的地址。这是因为，当程序员通过静态链接方式编译生成应用程序时，应用程序中调用的与.lib文件中导出符号相匹配的函数符号将进入到生成的EXE 文件中，.lib文件中所包含的与之对应的DLL文件的文件名也被编译器存储在 EXE文件内部。当应用程序运行过程中需要加载DLL文件时，Windows将根据这些信息发现并加载DLL，然后通过符号名实现对DLL 函数的动态链接。这样，EXE将能直接通过函数名调用DLL的输出函数，就象调用程序内部的其他函数一样。<br>
+<font size="2"><strong>2.1.3 DllMain函数</strong></font><br>
+Windows在加载dll的时候，会首先需要一个入口函数DllMain。当在dll中不定义DllMain的时候，windows会从其他运行库中调用一个不做任何操作的DllMain函数，直接返回true。DllMain是dll内部的函数，这意味着在调用dll的程序中不能显式的调用。它是在 dll被调用时自动被调用的。<br>
+BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call,<br>
+LPVOID lpReserved)<br>
+{<br>
+switch (ul_reason_for_call)<br>
+{<br>
+case: DLL_PROCESS_ATTACH:<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> break;<br>
+case: DLL_THREAD_ATTACH:<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> break;<br>
+case: DLL_THREAD_DETACH:<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> break;<br>
+case: DLL_PROCESS_DETACH:<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> break;<br>
+return TRUE;</div>
+<div><br>
+} <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr><br>
+}</div>
+<div><font size="2"><strong>2.2 在dll中导出变量</strong></font><br>
+1、在dll中定义变量 extern int global;<br>
+2、在.def中定义输出 EXPORTS:<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> global DATA<br>
+3、 在应用程序中调用：#pragma comment(lib,&quot;dllTest.lib&quot;)<br>
+extern int global;<br>
+注意在此引入的变量global，是一个地址，在使用时需要强制转化为指针后再用，才能得到其值。<br>
+（int *）global=10;<br>
+在应用工程中引用DLL中全局变量的一个更好方法是:<br>
+extern int _declspec(dllimport) global; //用_declspec(dllimport)导入<br>
+通过_declspec(dllimport)方式导入的就是DLL中全局变量本身而不再是其地址了,建议在一切可能的情况下使用这种方式。<br>
+<font size="2"><strong>2.3 dll导出类</strong></font><br>
+ <wbr></wbr> <wbr></wbr> 在定义的时候用 class _declspec(dllexport) classname{<br>
+}<br>
+在类中引用的时候用<br>
+加入类定义头文件：#include &ldquo;classname.h&rdquo;<br>
+Class _declspec(dllimport) classname 来导入类<br>
+<font size="3"><strong>3、 MFC规则Dll</strong></font><br>
+MFC规则DLL的概念体现在两方面：<br>
+　　（1） 它是MFC的<br>
+　　&ldquo;是MFC的&rdquo;意味着可以在这种DLL的内部使用MFC；<br>
+　　（2） 它是规则的<br>
+　　&ldquo;是规则的&rdquo;意味着它不同于MFC扩展DLL，在MFC规则DLL的内部虽然可以使用MFC，但是其与应用程序的接口不能是MFC。而MFC扩展DLL与应用程序的接口可以是MFC，可以从MFC扩展DLL中导出一个MFC类的派生类。<br>
+　　Regular DLL能够被所有支持DLL技术的语言所编写的应用程序调用，当然也包括使用MFC的应用程序。在这种动态连接库中，包含一个从CWinApp继承下来的类，DllMain函数则由MFC自动提供。<br>
+（1）静态链接到MFC 的规则DLL<br>
+　　静态链接到MFC的规则DLL与MFC库（包括MFC扩展 DLL）静态链接，将MFC库的代码直接生成在.dll文件中。在调用这种DLL的接口时，MFC使用DLL的资源。因此，在静态链接到MFC 的规则DLL中不需要进行模块状态的切换。<br>
+　　使用这种方法生成的规则DLL其程序较大，也可能包含重复的代码。<br>
+（2）动态链接到MFC 的规则DLL<br>
+　　动态链接到MFC 的规则DLL 可以和使用它的可执行文件同时动态链接到 MFC DLL 和任何MFC扩展 DLL。在使用了MFC共享库的时候，默认情况下，MFC使用主应用程序的资源句柄来加载资源模板。这样，当DLL和应用程序中存在相同ID的资源时（即所谓的资源重复问题），系统可能不能获得正确的资源。因此，对于共享MFC DLL的规则DLL，我们必须进行模块切换以使得MFC能够找到正确的资源模板。<br>
+ <wbr></wbr> <wbr></wbr> 我们可以在Visual C++中设置MFC规则DLL是静态链接到MFC DLL还是动态链接到MFC DLL。如图8，依次选择Visual C++的project -&gt; Settings -&gt; General菜单或选项，在Microsoft Foundation Classes中进行设置。</div>
+<div><font size="2"><strong>3.1规则DLL的创建;</strong></font><br>
+与非MFCdll不同的是，在其定义里面可以引入MFC类，其他与非MFC一样<br>
+<font size="2"><strong>3.2规则DLL的调用</strong></font><br>
+（1）显示方式LoadLibrary , GetProcAdress , FreeLibrary<br>
+(2) 我们照样可以在EXE程序中隐式调用MFC规则DLL，只需要将DLL工程生成的.lib文件和.dll文件拷入当前工程所在的目录，并在RegularDllCallDlg.cpp文件（图12所示对话框类的实现文件）的顶部添加：<br>
+#pragma comment(lib,&quot;RegularDll.lib&quot;)<br>
+<font size="2"><strong>3.3共享MFC DLL的规则DLL的模块切换</strong></font><br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> 应用程序进程本身及其调用的每个DLL模块都具有一个全局唯一的HINSTANCE句柄，它们代表了DLL或EXE模块在进程虚拟空间中的起始地址。进程本身的模块句柄一般为0x400000，而DLL模块的缺省句柄为0x10000000。如果程序同时加载了多个DLL，则每个DLL模块都会有不同的 HINSTANCE。应用程序在加载DLL时对其进行了重定位。<br>
+　　共享MFC DLL（或MFC扩展DLL）的规则DLL涉及到HINSTANCE句柄问题，HINSTANCE句柄对于加载资源特别重要。EXE和DLL都有其自己的资源，而且这些资源的ID可能重复，应用程序需要通过资源模块的切换来找到正确的资源。如果应用程序需要来自于DLL的资源，就应将资源模块句柄指定为 DLL的模块句柄；如果需要EXE文件中包含的资源，就应将资源模块句柄指定为EXE的模块句柄。<br>
+模块的切换有三种方式：<br>
+（1）在DLL函数中调用：AFX_MANAGE_STATE(AfxGetStaticModuleState());（推荐使用，最简单）</div>
+<div>void ShowDlg(void)</div>
+<div>{</div>
+<div>//方法1:在函数开始处变更，在函数结束时恢复</div>
+<div>//将AFX_MANAGE_STATE(AfxGetStaticModuleState());作为接口函数的第一//条语句进行模块状态切换</div>
+<div>AFX_MANAGE_STATE(AfxGetStaticModuleState());</div>
+<div><br>
+CDialog dlg(IDD_DLL_DIALOG);//打开ID为2000的对话框</div>
+<div>dlg.DoModal();</div>
+<div>}</div>
+<div>（2）在DLL函数中调用AfxGetResourceHandle();</div>
+<div>AfxSetResourceHandle(HINSTANCE xxx);<br>
+（3）由应用程序自身切换（不推荐，最麻烦）<br>
+<font size="3"><strong>4、扩展MFCDLL</strong></font><br>
+MFC扩展DLL的内涵为MFC的扩展，用户使用MFC扩展DLL就像使用MFC本身的DLL一样。除了可以在MFC扩展DLL的内部使用MFC以外， MFC扩展DLL与应用程序的接口部分也可以是MFC。我们一般使用MFC扩展DLL来包含一些MFC的增强功能，譬如扩展MFC的CStatic、 CButton等类使之具备更强大的能力。<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> 导出一个类，直接在类声明头文件中使用AFX_EXT_CLASS即可，最后别忘了在调用dll的程序中加入class的头文件</div>
+<div><strong><font size="3">5、总结：</font></strong></div>
+<div>综上所述:以上几种dll主要由以下几种区别：</div>
+<div>1、动态链接库是将exe程序在程序执行的时候动态加载的，而静态链接库是在编译的时 将其编译在代码之中的</div>
+<div>2、动态链接库可以输出变量、函数和类。其中每种输出的方式与调用方式不尽相同：</div>
+<div>（1）变量：在dll中定义 extern int global;</div>
+<div> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> 在.def文件中输出 EXPORTS</div>
+<div> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> global DATA</div>
+<div>或extern _declspec(dllexport)int global(不用输出文件了)</div>
+<div>在程序中调用：</div>
+<div>静态调用： <wbr></wbr> <wbr></wbr> #pragma comment(lib,&quot;dllTest.lib&quot;)</div>
+<div> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> extern int _declspec(dllimport) global;</div>
+<div>动态调用:</div>
+<div>（2）函数:在dll中定义</div>
+<div>extern &ldquo;C&rdquo; __declspec(dllexport) int add(int a, int b);</div>
+<div>也可以在.def文件中输出该函数</div>
+<div>EXPORTS</div>
+<div><a href="mailto:add@1">add @ 1</a></div>
+<div>在程序中调用：</div>
+<div>静态调用：</div>
+<div>#pragma comment(lib,&quot;dllTest.lib&quot;)</div>
+<div>extern &quot;C&quot; __declspec(dllimport) add(int x,int y);</div>
+<div>动态调用：</div>
+<div> <wbr></wbr> <wbr></wbr> typedef int(*lpAddFun)(int, int); //宏定义函数指针类型<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> lpAddFun add;//函数指针<br>
+ <wbr></wbr> <wbr></wbr> HINSTANCE hDll=LoadLibrary(&ldquo;path&rdquo;);<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> add=(lpAddFun)GetProcAddress(hDll, &quot;add&quot;);//获得dll中的add函数指针<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> FreeLibrary(hDll);<br>
+ <wbr></wbr> <wbr></wbr> <wbr></wbr> <wbr></wbr> 在从dll调用中返回的函数、指针或者类都是以指针的方式会的，即返回的是函数、变量或类的地址。这里一定要注意，不能简单的用函数名来赋值。</div>
+<div>（3）类：在dll中定义：<br>
+在定义的时候用 class _declspec(dllexport) classname{<br>
+}<br>
+在类中引用的时候用<br>
+加入类定义头文件：#include &ldquo;classname.h&rdquo;<br>
+Class _declspec(dllimport) classname 来导入类<br>
+3、除了扩展MFC的dll外，其他的dll均可被其他语言编写的应用程序来调用。</div>
+</div></div></td></tr></table>
+
+<br>
+
+<div class="opt">
+
+<a href="/tiemsn/blog/category/%C4%AC%C8%CF%B7%D6%C0%E0" title="查看该分类中所有文章">类别：默认分类</a>
+
+
+
+	
+
+	| <a title="将此文章添加到百度搜藏" href="http://cang.baidu.com/do/add" onClick="return addToFavor();" target="_blank">添加到搜藏</a>
+
+	
+
+	| 浏览(<span id="result"></span>)
+
+	| <a href="#send">评论</a>&nbsp;(0)
+
+
+
+<script language="javascript">
+
+/*<![CDATA[*/
+
+var pre = [true,'NLP常用信息资源', 'NLP常用信息资源','/tiemsn/blog/item/ac6d87187bddafb24bedbc46.html'];
+
+var post = [true,'C++的多态性实现机制剖析','C++的多态性实现机制剖析', '/tiemsn/blog/item/314c0dd7a7777edba144dfab.html'];
+
+if(pre[0] || post[0]){
+
+	document.write('<div style="height:5px;line-height:5px;">&nbsp;</div><div id="in_nav">');
+
+	if(pre[0]){
+
+		document.write('上一篇：<a href="' + pre[3] + '" title="' + pre[1] + '">' +  pre[2] + '</a>&nbsp;&nbsp;&nbsp;&nbsp;');
+
+	}
+
+	if(post[0]){
+
+		document.write('下一篇：<a href="' + post[3] + '" title="' + post[1] + '">' +  post[2] + '</a>');
+
+	}
+
+	document.write('</div>');
+
+}
+
+/*]]>*/
+
+</script>
+
+
+
+</div>
+
+<div class="line">&nbsp;</div>
+
+
+
+
+
+
+
+    
+<style type="text/css">
+
+/*<![CDATA[*/
+
+#in_related_doc a { text-decoration:none; }
+
+/*]]>*/
+
+</style>
+
+<div id="in_related_tmp"></div>
+
+<script language="javascript" type="text/javascript">
+
+/*<![CDATA[*/
+
+function HI_MOD_IN_RELATED_DOC_CALLBACK(arg){
+
+    if(arg.length <= 1) return false;
+
+    var hasMore = arg[0];
+
+    var D=function(A,B){A[A.length]=B;}
+
+    if(arg.length % 2 == 0) D(arg, ["","","",""]);
+
+
+
+    var html = ['<div id="in_related_doc"><div class="tit">相关文章：</div>'];
+
+    D(html, '<table cellpadding="0" cellspacing="3" border="0">');
+
+    for(var i = 1, j = arg.length; i < j; i += 2){
+
+        D(html, '<tr>');
+
+        D(html, '<td width="15px"><a style="font-size:25px" >&#8226;</a></td><td><a href="http://hi.baidu.com/' + arg[i][3] + '/blog/item/' + arg[i][2] + '.html" target="_blank" title="' + arg[i][0] + '">' + arg[i][1] + '</a>');
+
+        D(html, new Array(10).join('\u3000'));
+
+        D(html, '</td>');
+
+        if(arg[i + 1][0] != "")
+
+            D(html, '<td width="15px"><a style="font-size:25px" >&#8226;</a></td><td><a href="http://hi.baidu.com/' + arg[i + 1][3] + '/blog/item/' + arg[i + 1][2] + '.html" target="_blank" title="' + arg[i + 1][0] + '">' + arg[i + 1][1] + '</a></td>');
+
+        else
+
+            D(html, '<td>&nbsp;</td><td>&nbsp;</td>');
+
+        D(html, '</tr>');
+
+    }
+
+    if(hasMore) D(html, '<tr><td colspan="4"><a target="_blank" href="/sys/search?pageno=1&type=7&sort=1&word=%D7%AA%CC%F9%20%20dll%B5%BC%B3%F6%C0%E0&item=6fb39e3d29387706bba1673b">更多&gt;&gt;</a></td></tr>');
+
+    D(html, '</table></div><div class="line">&nbsp;</div>');
+
+
+
+    var div = document.getElementById('in_related_tmp');
+
+    if(div){
+
+        div.innerHTML = html.join('');
+
+        while(div.firstChild){
+
+            div.parentNode.insertBefore(div.firstChild, div);
+
+        }
+
+        div.parentNode.removeChild(div);
+
+    }
+
+	window.setTimeout("tracker_init('in_related_doc')",100);
+
+}
+
+
+
+if(RelatedDocData == -1){	// not supported xhr
+
+    var script = document.createElement('script');
+
+    script.type = 'text/javascript';
+
+    script.src = '/sys/search?type=8&word=%D7%AA%CC%F9%20%20dll%B5%BC%B3%F6%C0%E0&item=6fb39e3d29387706bba1673b&t=' + new Date().getTime();
+
+    document.getElementsByTagName('HEAD')[0].appendChild(script);
+
+}else if(RelatedDocData == null){
+
+	GetAndEval = true;
+
+}else{
+
+	eval(RelatedDocData);
+
+}
+
+
+
+/*]]>*/
+
+</script>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="in_reader">
+
+<div class="tit">最近读者：</div>
+
+
+
+<script>
+
+
+
+	var g_spAnnony=true;
+
+
+
+
+
+var g_read=[
+
+
+
+["rightmin","7ecb72696768746d696eb702","rightmin"],
+
+
+
+["907722","1ed63930373732328e00","907722"],
+
+
+
+["%D0%A1code","fb85d0a1636f64658708","小code"],
+
+
+
+["jd0224","25dd6a64303232349a06","jd0224"],
+
+
+
+["zhuangzi200323","11cf7a6875616e677a693230303332335f02","zhuangzi200323"],
+
+
+
+["%B1%B1%B7%E7%CE%A2%B7%E7","1945b1b1b7e7cea2b7e78f07","北风微风"],
+
+
+
+["niesongsong","bc9c6e6965736f6e67736f6e67a403","niesongsong"],
+
+
+
+["zuollblog","f62f5a756f4c4c426c6f67dd07","ZuoLLBlog"],
+
+
+
+{}
+
+];
+
+g_read.length=g_read.length-1;
+
+
+
+var _rh1="";
+
+var _rh2="";
+
+
+
+function wrreader(){
+
+	_rh1 += '<table width="100%" ><tr>';
+
+	_rh2+='<tr>';
+
+	if(g_spAnnony){
+
+		_rh1+='<td align="center" width="10%" ><img border="0" width="55" height="55" src="http://img.baidu.com/hi/img/portraitn.jpg"></td>';
+
+		_rh2+='<td>&nbsp;</td>';
+
+		if(g_read.length>0){
+
+			_rh1+='<td align="left" width="12%">';
+
+		}else{
+
+			_rh1+='<td align="left" width="100%">';
+
+		}
+
+		_rh1+='<a href="https://passport.baidu.com/?login&tpl=sp&tpl_reg=sp&u='+myref+'" target="_self">登录</a>后，您就出现在这里。</td>';
+
+		_rh2+='<td>&nbsp;</td>'
+
+	}
+
+	if(g_read.length==0){
+
+		if(!g_spAnnony){
+
+			_rh1+='<td align=left width="100%">最近还没有登录用户看过这篇文章……</td>';
+
+			_rh2+='<td>&nbsp;</td>';
+
+		}
+
+	}else{
+
+		for(i=0,len=g_read.length;i<len;i++){
+
+			_rh1+='<td align="center" valign="bottom" width="10%" class="user"><a href="/'+g_read[i][0]+'" target="_blank" class="ucard" pid='+g_read[i][1]+'><img border="0" src="http://himg.baidu.com/sys/portraitn/item/'+g_read[i][1]+'.jpg"></a></td>';
+
+			_rh2+='<td align="center" valign="top" class="user"><a href="/'+g_read[i][0]+'" target="_blank" class="ucard" pid="'+g_read[i][1]+'">'+g_read[i][2]+'</a></td>';
+
+		}
+
+	}
+
+	_rh1+='<td width="100%"></td></tr>';
+
+	_rh2+='<td></td></tr></table>';
+
+	document.write(_rh1+_rh2);
+
+}
+
+
+
+wrreader();
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+	</div>
+
+
+
+<div class="line">&nbsp;</div>
+
+
+
+
+
+
+
+<script language="JavaScript">
+
+allkey=allkey+"d9c5ca131d200823dd54018c_6fb39e3d29387706bba1673b_";
+
+</script>
+
+
+
+<div id="in_comment">
+
+<a name="comment"></a>
+
+<div class="tit">网友评论：</div>
+
+<script>
+
+function writecmt(type,id,cmtname,cmturl,portraitId){
+
+	var html1="";
+
+	cmturl=cmturl.replace("https://","http://");
+
+	if(type==1){
+
+			html1="<a href='"+cmturl+"' target='_blank' class='ucard' pid="+portraitId+"><img  border='0' src='http://himg.baidu.com/sys/portraitn/item/"+portraitId+".jpg'><br>"+cmtname+"</a>";
+
+	}else{
+
+		if(cmtname=="" || cmtname=="匿名网友"){
+
+			if(cmturl==""){
+
+				html1="<a>匿名网友</a>";
+
+			}else{
+
+				html1="<a href='"+cmturl+"' target='_blank' title='"+cmturl+"'>"+cmtname+"</a>";
+
+			}
+
+		}else{
+
+			if(cmturl==""){
+
+				html1="<div class='f14' style='display:inline'>网友:<a>"+cmtname+"</a></div>";
+
+			}else{
+
+				html1="<div class='f14' style='display:inline'>网友:<a href='"+cmturl+"' target='_blank' title='"+cmturl+"'>"+cmtname+"</a></div>";
+
+			}
+
+		}
+
+	}
+
+	document.write(html1);
+
+}
+
+function filterCmtContent(n){
+
+	if(!BdBrowser.isIE){
+
+		var defaultfilter1='<span style="filter:glow(color=#000000,strength=2);height:0px;color:#000000">';
+
+		var defaultfilter2='<span style="height: 0px; color: rgb(0, 0, 0);">';
+
+		var commentDiv=document.getElementById(n);
+
+		var divs=commentDiv.getElementsByTagName('div');
+
+		var d,tmp;
+
+		for( var i=0,len=divs.length;i<len;i++){
+
+			d=divs[i];
+
+			if(d.getAttribute('name')=='cmtcontent'){
+
+				tmp=d.innerHTML;
+
+				tmp=tmp.replace(/<span style="filter:glow\(color=#([0-9a-z]{3,6}),strength=2\);height:0px;color:#([0-9a-z]{3,6})">/ig,defaultfilter1);
+
+				tmp=tmp.replace('<span style="height: 0px; color: rgb(255, 255, 255);">',defaultfilter2);
+
+				d.innerHTML=tmp;
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+</script>
+
+
+
+
+<div id="page"></div>
+
+
+
+</div>
+
+<script>filterCmtContent('in_comment');</script>
+
+
+
+
+
+<div id="in_send">
+
+<a name="send"></a>
+
+<form name="form1" id="popFormSubmit" action="/tiemsn/commit" method="post" onSubmit="return checkcmtform()">
+
+<input type="hidden" name="bdstoken" value="">
+
+<input type="hidden" name="ct" value="8">
+
+<input type="hidden" name="cm" value="1">
+
+<input type="hidden" name="spBlogID" value="6fb39e3d29387706bba1673b">
+
+<input type="hidden" name="spRefURL" id="spRefURL" />
+
+<script>
+
+    document.getElementById("spRefURL").value = window.location.href;
+
+</script>
+
+<div class="tit">发表评论：</div>
+
+<table width="620" border="0" cellspacing="5" cellpadding="0">
+
+<tr>
+
+
+
+<td class="f14">姓　名：</td>
+
+<td><input type="text" name="spBlogCmtor" id="spBlogCmtor" style="width:220px" onChange="checkname('spBlogCmtor')" maxlength="49" onFocus="hidErr(1);">
+
+<script>
+
+document.write(" &nbsp;&nbsp; <a href='http://hi.baidu.com/st/reg.html' target='_blank'>注册</a>");
+
+document.write(' | <a href="https://passport.baidu.com/?login&tpl=sp&tpl_reg=sp&u='+myref+'">登录</a>');
+
+
+
+</script>
+
+
+
+<div style="display:none" id="nmerror">*姓名最长为50字节</div></td>
+
+</tr>
+
+
+
+<tr id="1_err" style="display:none">
+
+<td>&nbsp;</td>
+
+<td><div class="error" id="1_err_con"></div></td>
+
+</tr>
+
+
+
+<tr>
+
+<td class="f14">网址或邮箱：</td>
+
+<td><input type="text" name="spBlogCmtURL" id="spBlogCmtURL" style="width:360px" maxlength="128" onChange="checkeandu('spBlogCmtURL')" onFocus="hidErr(2);"> (选填)</td>
+
+<script>
+
+G("spBlogCmtor").value="";
+
+G("spBlogCmtURL").value="";
+
+</script>
+
+
+
+</tr>
+
+
+
+<tr id="2_err" style="display:none">
+
+<td>&nbsp;</td>
+
+<td><div class="error" id="2_err_con"></div></td>
+
+</tr>
+
+
+
+<tr>
+
+<td valign="top" class="f14" id="reTitle">内　容：</td>
+
+<td><textarea name="spBlogCmtText" id="spBlogCmtText" style="width:520px;height:155px" onFocus="hidErr(3);" ></textarea>
+
+<script>
+
+	var editor=null;
+
+	try{
+
+		editor=new BdEditor("spBlogCmtText",{width:"100%",height:"155px"});
+
+		editor.onfocus = function(){hidErr(3);}
+
+		editor.render();
+
+	}catch(e){
+
+		var spBlogCmtText = document.getElementById("spBlogCmtText");
+
+		var p = spBlogCmtText.previousSibling;
+
+		while(p && p.nodeType != 1) p = p.previousSibling;
+
+		if(p && /bdeditor_container/.test(p.id)){
+
+			p.parentNode.removeChild(p);
+
+		}
+
+		spBlogCmtText.style.display = '';
+
+		editor=null;
+
+	}
+
+</script>
+
+
+
+<script>
+
+G("spBlogCmtor").value=G("spBlogCmtor").defaultValue;
+
+G("spBlogCmtText").value="";
+
+</script>
+
+</td>
+
+</tr>
+
+<tr id="3_err" style="display:none">
+
+<td>&nbsp;</td>
+
+<td><div class="error" id="3_err_con"></div></td>
+
+</tr>
+
+
+
+<tr id="vercode">
+
+<td valign="top" class="f14">验证码：</td>
+
+<td valign="top"><input type="hidden" name="spVcode" value="" />
+
+<input type="text" onFocus="f_focus()" id="spVerifyKey" name="spVerifyKey" size="6"  maxlength="4" autocomplete="off" tabindex=4>  请点击后输入四位验证码，字母不区分大小写<br/>
+
+<script type="text/javascript">
+
+/*<![CDATA[*/
+
+
+function f_focus(){
+	getVcode();
+}
+function getVcode(){
+	var url="http://hi.baidu.com/sys/file/getvcode?echoback=getVcodeDone&t="+(new Date().getTime());
+	BdAjax.loadJS(url)
+}
+
+function getVcodeDone(vcode){
+	document.form1.spVcode.value=vcode;
+	var imgsrc="http://hiup.baidu.com/cgi-bin/genimg?"+vcode;
+	G('verifypic').src=imgsrc;
+	G('yanzheng').style.display="block";
+}
+function newverifypic(){
+	getVcode();
+	return false;
+}
+
+/*]]>*/
+
+</script>
+
+<div id="yanzheng" style="display:none">
+
+<img id='verifypic' width='120' height='40'><wbr /><a onFocus="this.blur();" href="#" onClick="return newverifypic();" title="看不清左边的字符" >看不清?</a>
+
+</div>
+
+</td>
+
+</tr>
+
+
+
+
+
+<tr>
+
+<td valign="top"class="f14">&nbsp;</td>
+
+<td valign="top" class="f14"><input id="btn_ok" name="btn_ok" type="submit" value="发表评论" tabindex=5>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="cancleReLink" onClick="canclereply(); return false;" style="display:none; font-size:12px;color:#666;">取消回复</a></td>
+
+</tr>
+
+</table>
+
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+
+<br>
+
+</div>
+
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" height="8">
+
+<tr><td class="modbl" width="7">&nbsp;</td>
+
+<td class="modbc">&nbsp;</td>
+
+<td class="modbr" width="7">&nbsp;</td>
+
+</tr></table>
+
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+<script language="javascript">
+
+//fck layout rework
+</script>
+<script src="/js/bgmusic.js?v=1.0.js" language="javascript"></script>
+<script language="javascript">
+function initBlogTextForFCK(){
+	//fck layout resize
+    /*
+    var fckLayoutArr=document.getElementById('blog_text').getElementsByTagName('table');
+	for(var i=0,n=fckLayoutArr.length;i<n;i++){
+		if(fckLayoutArr[i].className.indexOf('FCKLAYOUT')>-1){
+			fckLayoutArr[i].width="100%";
+			fckLayoutArr[i].style.width="100%";
+			fckLayoutArr[i].style.height="100%";
+		}
+	}
+    */
+
+	//fck init music
+	if(window.Node){Node.prototype.replaceNode=function(Node){this.parentNode.replaceChild(Node,this);}}
+	var imgBox=document.getElementsByName('musicName');
+	var isAutoPlay=true;
+	for(var i=0,n=imgBox.length;i<n;i++){
+		var img=imgBox[i];
+		if(img.getAttribute('rel')){
+			var musicSrc=img.getAttribute('rel');
+			var musicDiv = document.createElement("SPAN");
+			var tmp=musicSrc.substr (musicSrc.indexOf('#')+1, 1);
+			var tmpAutoPlay=(tmp=='1');
+			if(isAutoPlay&&tmpAutoPlay){
+				isAutoPlay=false;
+				tmpAutoPlay=true;
+			}else{
+				tmpAutoPlay=false;
+			}
+			var shtml=creatbgmusic(musicSrc.substr(0,musicSrc.indexOf('#')),1,true,false,tmpAutoPlay,tmpAutoPlay,'FckMusicHelper');
+			shtml=shtml.replace('width=100%','width=200').replace('width="100%"','width=200 height=45');			img.replaceNode(musicDiv);
+			musicDiv.innerHTML=shtml;
+			i--;n--;
+		}
+	}
+	//document.getElementById('blog_text').style.display='';
+}
+initBlogTextForFCK();
+</script>
+
+<script language="javascript">
+
+<!--
+
+var hstr="/tiemsn/brwstat?key1=1";
+
+document.write("<script src='"+hstr+"&key2="+allkey+"'><\/script>");
+
+//-->
+
+</script>
+
+<br><center><div id="ft">&copy;2009 Baidu</div></center>
+
+
+
+<script>
+
+if(document.getElementById("m_blog"))
+
+{
+
+	var imgarray = document.getElementById("m_blog").getElementsByTagName('img');
+
+	var imgw = document.getElementById("m_blog").offsetWidth;
+
+	imgw =imgw-40;
+
+    for(var i=0; i<imgarray.length; i++){
+    	if(imgarray[i].className=="blogimg" && imgarray[i].width>=imgw) {
+	    	imgarray[i].width=imgw;
+        }
+    }
+}
+
+
+
+// Fix ff bugs
+
+var blog_text = document.getElementById('blog_text');
+
+blog_text.innerHTML = blog_text.innerHTML.replace(/href\s*=\s*("|')?(\.\.\/\.\.\/)/gi,"href=$1../$2");
+
+
+
+gotoreply();
+
+</script>
+
+</center>
+
+
+
+<img src="http://c.baidu.com/c.gif?t=6&p=3" style="display:none;"/>
+<iframe id="submitiframe" name="submitiframe" src="/st/blank.html" style="display:none;"></iframe>
+
+			
+
+
+
+
+<SCRIPT src="/ui/scripts/ucard/all.js?v=020507100.js"></SCRIPT>
+<link rel="stylesheet" type="text/css" href="/ui/css/ucard/ucard.css?v=020507100.css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+
+var Session = {
+    spaceURL: "/tiemsn",
+    pageURL: "http://hi.baidu.com/tiemsn/blog/item/6fb39e3d29387706bba1673b%2Ehtml",    
+    isHost: "",         
+    userName: "tiemsn",   
+    userNameEnc:    "tiemsn",
+    visitorPortrait:'00000000',
+    visitorName:    "",
+    visitorURL: "/index.html",        // 
+    refer: "",
+    spBasicURL:"tiemsn",
+    spBasicURLEnc:"tiemsn"
+};
+
+baidu.dom.ready(function(){
+        baidu.space.mycard.bind('m_blog',Session.visitorPortrait);
+});
+
+/*]]>*/
+</script>
+
+
+
+
+
+	<script type="text/javascript" src="/ui/scripts/refer/refer.js"></script>
+	
+</body></html>

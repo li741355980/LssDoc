@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello React!</title>
+    <!--react核心库-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react.min.js"></script>
+    <!--提供dom相关功能-->
+    <script src="http://static.runoob.com/assets/react/react-0.14.7/build/react-dom.min.js"></script>
+    <!--将jsx语法转换为js语法-->
+    <script src="http://static.runoob.com/assets/react/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">/*如果要使用jsx type要设置为text/babel*/
+      var names=['小红','小明','小黑'];
+      var paras=[
+          <p style={{"color":"red","font-family": "monospace","font-size": "33"}}>这是段落1</p>,
+          <p style={{"color":"green"}}>这是段落2</p>,
+          <p style={{"color":"blue"}}>这是段落3</p>,
+      ];
+      var HelloComponent = React.createClass(
+          {//react 允许将代码封装成组件（使用createClass方法），组件名首字母必须大写
+              render:function(){//组件类必须有自己的render方法，而且只能有一个顶层标签，组件属性使用props获取
+                  return <h1>Hello {this.props.name}</h1>;
+              }
+          }
+      );
+      var HelloChildren = React.createClass(
+        {
+            render:function(){
+                return (
+                    <ol>
+                        {//自定义组件的props属性中中的children属性，表示组件的子节点列表，其他属性都是组件属性，如果没有子节点，那么这各children就是undefined类型，只有一个节点那么就是object类型，多个就是array类型，React提供了一个方法Children来处理这个属性，而省去了区分类型的麻烦
+                            React.Children.map(this.props.children,function (child) {
+                                return <li>{child}</li>
+                            }) 
+                        }
+                    </ol>
+                );
+            }
+        }
+      );
+    var HelloPropType = React.createClass(
+        {
+            propTypes:{
+/*
+    指定属性的数据类型，如果不对，会有警告信息
+    undefined - 如果变量是 Undefined 类型的
+    boolean - 如果变量是 Boolean 类型的
+    number - 如果变量是 Number 类型的
+    string - 如果变量是 String 类型的
+    object - 如果变量是一种引用类型或 Null 类型的
+*/
+                name:React.PropTypes.string.isRequired,
+                age:React.PropTypes.number.isRequired,
+            },
+            getDefaultProps : function () {
+                /*给属性设置默认的值*/
+                return {
+                    name : '默认名字',
+                    age : 20
+                };
+            },
+            render:function(){
+                return <div>
+                          <h1>名字是:{this.props.name}</h1>
+                          <h1>年龄是:{this.props.age}岁</h1>
+                        </div>
+            }
+        }
+    );
+
+
+
+    ReactDOM.render(
+        //jsx语法，允许在js中直接使用html语法，而不加引号
+        <div>
+            <h1>Hello, world!</h1>
+            {//当遇到{}括起来的代码，就使用js语法解析
+                names.map(function(name){
+                    return <div>Hello,{name}！</div>
+                })      
+            }
+              
+            <div>
+                {paras/*jsx允许直接插入js变量，如果是一个数组，则展开这个数组的成员*/} 
+            </div>
+              
+            <HelloComponent name="--使用自定义组件，这个标签自动生成一个实例--"/>  
+            
+            <HelloChildren>
+                这是自定义组件的子节点0
+                <div>fjkflsjkfl</div>
+            </HelloChildren>
+             
+            <HelloPropType name="小丽" age={11}/>
+            <HelloPropType/>
+            
+            
+            
+        </div>, 
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>

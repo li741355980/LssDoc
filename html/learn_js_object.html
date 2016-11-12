@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>js object</title>
+    </head>
+    <body>
+       <script>
+            var Cat = {//原型对象
+                name : '',
+                color : '',
+            }
+            var cat1 = {};//对象生成方式1，根据原型对象定义（Cat），原型对象跟实例没有任何联系
+            cat1.name="c1";
+            cat1.color="yellow";
+            console.log("小猫1 name:"+cat1.name+" color "+cat1.color+" ");
+           
+            function createCat(name ,color){//工厂函数
+                return {
+                    name:name,
+                    color:color
+                }
+            }
+            var cat2_1 = createCat("c2_1","yellow");
+            var cat2_2 = createCat("c2_2","yellow");//对象生成方式2，利用函数,但是生成的对象cat2_1 cat2_2没有内在联系，不是同一个原型对象(类)的实例
+            console.log("小猫2 name:"+cat2_1.name+" color "+cat2_1.color);
+           
+           
+           function Cat_0(name,color){//构造函数模式
+               this.name=name;
+               this.color=color;
+           }
+           var cat3_1 = new Cat_0("c3_1","yellow");//对象生成方式3，利用构造函数，生成的对象都是从同一个原型对象 构造而成，而且会自动含有一个constructor属性指向构造函数，并且，可以使用instanceof
+           var cat3_2 = new Cat_0("c3_2","yellow");
+           console.log(" instanceof ? "+(cat3_1 instanceof Cat_0)+" "+(cat3_2 instanceof Cat_0));
+           console.log(" constructor==Cat ? "+(cat3_1.constructor == Cat_0)+" "+(cat3_2.constructor == Cat_0));
+           
+           
+           function Cat_1(name,color){
+               this.name = name;
+               this.color = color;
+           }
+           Cat_1.prototype.type="家禽";
+           //每个构造函数都有一个prototype属性，这个属性是一个单独的对象，
+           //可以把不变的属性和方法定义在这个对象上，避免每个实例都有新副本，造成浪费
+           Cat_1.prototype.eat = function(){console.log("我要吃老鼠")};
+        
+           var cat4_1=new Cat_1("c4_1","yellow");
+           console.log("isPrototypeOf "+Cat_1.prototype.isPrototypeOf(cat4_1));//判断prototype与实例的关系
+           console.log("name is OwnProperty "+cat4_1.hasOwnProperty("name"));//判断属性是否是本地属性，还是prototype属性
+           console.log("eat is OwnProperty "+cat4_1.hasOwnProperty("eat"));
+           console.log("name is property of Cat_1:"+("name" in cat4_1));//判断是否属于某个对象的属性，不管是本地还是prototype属性
+           console.log("eat is property of Cat_1:"+("eat" in cat4_1));
+           for(var prop in cat4_1){//遍历属性
+               
+           }
+           
+           
+           
+           function Animal(){
+               this.species="动物";
+           }
+           function Animal_1(spec){
+               this.species=spec;
+           }
+           function Cat_2(name,color,spec){//继承1 将父对象构造函数绑定到子对象 注意：这种方式不能将父类的prototype的属性继承到子类
+               //Animal_1.call(this,spec);//call方式参数后面直接写上
+               Animal_1.apply(this,[spec]);//apply方式参数组装成数组
+               this.name=name;
+               this.color=color;
+           }
+           var cat5_1=new Cat_2("c5_1","yellow","动物_");
+           var cat5_1_1=new Cat_2("c5_1_1","yellow","cat5_1_1")
+           console.log("cat5_1 species "+cat5_1.species+" "+cat5_1_1.species);
+           
+           /**apply call函数说明**/
+           //首先要明白，js的函数里面的this指向的是其调用对象，我们在使用new关键字的时候指向的是新生成的对象，在全局区域调用指向的是window对象
+           //apply call函数的作用在于，切换目标函数的对象上下文，也就是其this指向，并执行
+           //例如上述Animal_1.apply(this,[spec])，就是调用Animal函数，但是其this其实指向Cat_2
+           
+           
+           
+           function Cat_3(name,color){
+               this.name=name;
+               this.color=color;
+               Animal.call(this);
+           }
+           Cat_3.prototype=new Animal();//继承2 将prototype设置为一个Animal对象
+           Cat_3.prototype.constructor=Cat_3;//任何一个prototype都有constructor属性，指向构造函数，注意:这样继承导致Animal 的prototype.constructor也指向了Cat_3
+           
+           var cat6_1=new Cat_3("c6_1","yellow");
+           var cat6_1_1=new Cat_3("c6_1","red");
+           cat6_1_1.species="cat6_1_1"
+           console.log("cat6_1 species "+cat6_1.species+" "+cat6_1_1.species);
+           
+           
+           function extend(child,parent){
+               var F = function(){};
+               F.prototype = parent.prototype;
+               child.prototype = new F();
+               child.prototype.constructor=child;
+               child.uber=parent.prototype;//这个属性指向父类的prototype，可用于在子类的构造函数中调用父类的构造函数构造父类
+           }
+           function Cat_4(name,color){
+               this.name=name;
+               this.color=color;
+               Cat_4.uber.constructor.call(this);
+           }
+           extend(Cat_4,Animal);//继承3 利用空对象做转接,这种方式是完美的继承方式
+           
+           var cat7_1=new Cat_4("c7_1","yellow");
+           var cat7_1_1=new Cat_4("c7_1","yellow");
+           cat7_1_1.species="cat7_1_1"
+           console.log("cat7_1 species "+cat7_1.species+" "+ cat7_1_1.species);
+           
+           function extend2(Child, Parent) {
+　　　　        var p = Parent.prototype;
+　　　　        var c = Child.prototype;
+　　　　        for (var i in p) {
+　　　　　　          c[i] = p[i];
+　　　　　　      }
+　　　　         Child.uber = p;//这个属性指向父类的prototype，可用于在子类的构造函数中调用父类的构造函数构造父类
+            //console.log("cat5 extend2 uber "+Cat_5.uber +(Child == Cat_5));
+　　         } 
+           function Cat_5(name,color){
+               this.name=name;
+               this.color=color;
+               Cat_5.uber.constructor.call(this);
+               //console.log("uber "+Cat_5.uber);
+           }
+           extend2(Cat_5,Animal);//继承4，复制,这种方式是完美的继承方式
+           // console.log("cat5 uber "+Cat_5.uber);
+           var cat8_1=new Cat_5("c8_1","yellow");
+            var cat8_1_1=new Cat_5("c8_1","yellow");
+            cat8_1_1.species="cat8_1_1"
+           console.log("cat8_1 species "+cat8_1.species+" "+cat8_1_1.species);
+        </script>
+        <p>按F12查看调试信息</p>
+    </body>
+</html>

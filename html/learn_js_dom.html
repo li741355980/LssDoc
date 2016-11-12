@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>js event</title>
+        <script>
+            function onFindElementByTag(){
+                var x=document.getElementById("main");
+                var y=x.getElementsByTagName("p");
+                document.write('id="main"元素中的第一个段落为：' + y[0].innerHTML);
+            }
+            function onFindElementByClass(){
+                var x=document.getElementsByClassName("intro");
+                document.write("<p>文本来自 class 为 intro 段落: " + x[0].innerHTML + "</p>");
+            }
+            function onChangeHtml(){
+                var x=document.getElementsByClassName("intro");
+                x[0].innerHTML="完美新世界！！";
+            }
+            function onChangeAttr(){
+                var x=document.getElementById("image");
+                x.src="app_launcher.png";
+            }
+            function onChangeCss(){
+                var x=document.getElementsByClassName("intro");
+                x[0].style.color="red";
+            }
+            function onIntroChange(){
+                alert("响应1")
+            }
+            function onIntroChange2(){
+                alert("多个响应不会覆盖")
+            }
+            function onAddListener(){
+                  var x=document.getElementsByClassName("intro");
+                  x[0].addEventListener("click",onIntroChange);
+                x[0].addEventListener("click",onIntroChange2);
+            }
+            function onAddParaToMain(){
+                var x=document.getElementById("main");
+                var para=document.createElement("p");//先创建节点
+                //var attr=document.createAttribute();
+                var node=document.createTextNode("这是一个新段落");//创建文字
+                para.setAttribute("style","color:red;");
+                para.setAttribute("class","newAppend");
+                para.appendChild(node);//将文字加入到新段落
+                x.appendChild(para);//将新段落加到main div
+            }
+            function onDeleteParaFromMain(){
+                var x=document.getElementById("main");
+                var newadd=document.getElementsByClassName("newAppend");
+                if(newadd.length>0){
+                    x.removeChild(newadd[0]);
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <!--常见的HTML事件-->
+        <!--onchange 	      HTML 元素改变
+            onclick 	      用户点击 HTML 元素
+            onmouseover 	  用户在一个HTML元素上移动鼠标
+            onmouseout 	      用户从一个HTML元素上移开鼠标
+            onkeydown 	      用户按下键盘按键
+            onload 	          浏览器已完成页面的加载-->
+    <button onclick="this.innerHTML=Date()">现在的时间是?</button>
+        
+        <!--
+            当网页被加载时，浏览器会创建页面的文档对象模型（Document Object Model）。
+            HTML DOM 模型被构造为对象的树：
+            通过Dom js可动态的创建HTML
+
+    JavaScript 能够改变页面中的所有 HTML 元素
+    JavaScript 能够改变页面中的所有 HTML 属性
+    JavaScript 能够改变页面中的所有 CSS 样式
+    JavaScript 能够对页面中的所有事件做出反应
+先找到该元素:
+    通过 id 找到 HTML 元素
+    通过标签名找到 HTML 元素
+    通过类名找到 HTML 元素
+            -->
+        <div id="main">
+            <p> DOM 是非常有用的。</p>
+            <p>该实例展示了<b>getElementsByTagName</b> 方法</p>
+        </div>
+        <button onclick="onFindElementByTag()">点击通过tag找element</button>
+        <p class="intro">你好世界!</p>
+        <button onclick="onFindElementByClass()">点击通过class找element</button><br>
+        <button onclick="onChangeHtml()">点击改变元素内容</button><br>
+        <img id="image" src="pic.png"><br>
+        <button onclick="onChangeAttr()">点击改变图片属性</button><br>
+        <button onclick="onChangeCss()">点击改变Css</button><br>
+        <button onclick="onAddListener()">点击增加文字点击监听</button><br>
+        <button onclick="onAddParaToMain()">点击增加新段落到main div</button>
+        <button onclick="onDeleteParaFromMain()">点击删除新段落从main div</button>
+    </body>
+</html>

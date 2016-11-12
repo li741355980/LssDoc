@@ -1,0 +1,32 @@
+
+
+
+
+1 target file 'clean' has both : and :: entries
+
+android-ndk-r8d/build/core/build-binary.mk:41: *** target file 
+
+`clean' has both : and :: entries.  Stop.
+ 
+
+我也遇到了相同的问题，不过经过一步步排查，是因为在libavfilter目录中的Makefile的末尾处多了 Clean 这个玩意儿 将其注释掉或者删掉就可以了
+
+2 time.h重定义
+
+把 ffmpeg/libavutil/time.h更名为avtime.h,
+同时修改下面文件中的引用libavutil/time.h为libavutil/avtime.h
+ffmpeg/libavformat/avio.c:25 
+ffmpeg/libavformat/hls.c:33 
+ffmpeg/libavformat/mux.c:39:30
+ffmpeg/libavformat/utils.c:40 
+ffmpeg/libavformat/http.c:40 
+ffmpeg/libavformat/hlsproto.c:40 
+ffmpeg/libavformat/rtmphttp.c:40 
+ffmpeg/libavformat/rtmpdec.c:40 
+ffmpeg/libavformat/rtsp.c:40 
+ffmpeg/libavformat/rtspdec.c:40 
+ffmpeg/libavformat/tcp.c:40 
+ffmpeg/libavformat/udp.c:40 
+ffmpeg/libavformat/network.c:40 
+ffmpeg/libavutil/time.c:36
+ffmpeg/libavutil/parseutils.c:36

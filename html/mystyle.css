@@ -1,0 +1,13 @@
+hr
+{
+    color: lightblue;
+}
+p
+{
+    margin-left: 10px;
+}
+body
+{
+    background-image: url("pic.png");
+    background-repeat: no-repeat;
+}

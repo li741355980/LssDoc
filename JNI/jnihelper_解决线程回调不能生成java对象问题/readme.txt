@@ -1,0 +1,1 @@
+JNIHelper需要在JNI_ONLOAD的时候传入jvm

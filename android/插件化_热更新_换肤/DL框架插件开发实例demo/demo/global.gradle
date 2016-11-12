@@ -1,0 +1,5 @@
+
+task buildLib (type: Jar, dependsOn:'assembleRelease') {
+    from (project.buildDir.toString()+'/intermediates/classes/release')
+}
+

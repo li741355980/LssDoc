@@ -1,0 +1,15 @@
+cd ~
+touch .bash_profile
+open -e .bash_profile
+
+
+在空白的TEXTVIEW中输入下面一行 然后关闭
+export PATH=${PATH}:/software/sdk/android-sdk-macosx/platform-tools
+
+
+终端输入
+source .bash_profile
+
+测试
+adb devices
+adb logcat

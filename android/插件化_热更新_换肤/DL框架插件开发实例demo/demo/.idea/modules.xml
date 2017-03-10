@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/demo.iml" filepath="$PROJECT_DIR$/.idea/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/demo.iml" filepath="$PROJECT_DIR$/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/doi-common/doi-common.iml" filepath="$PROJECT_DIR$/doi-common/doi-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/doi-host/doi-host.iml" filepath="$PROJECT_DIR$/doi-host/doi-host.iml" />
+      <module fileurl="file://$PROJECT_DIR$/doi-plugin/doi-plugin.iml" filepath="$PROJECT_DIR$/doi-plugin/doi-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/lib.iml" filepath="$PROJECT_DIR$/lib/lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main-host/main-host.iml" filepath="$PROJECT_DIR$/main-host/main-host.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main-plugin-a/main-plugin-a.iml" filepath="$PROJECT_DIR$/main-plugin-a/main-plugin-a.iml" />
+      <module fileurl="file://$PROJECT_DIR$/main-plugin-b/main-plugin-b.iml" filepath="$PROJECT_DIR$/main-plugin-b/main-plugin-b.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,11 @@
+第二种方案：龙井qq7.8
+          参考帖子：http://www.longene.org/forum/viewtopic.php?f=6&t=30516
+       安装方法：
+                第一步        下载好龙井打好的包，并使用软件中心或者dpkg命令安装该包；
+                第二步        安装依赖包：libncurses5和libgtk2.0-0；如果是64位系统请安装libncurses5:i386和libgtk2.0-0:i386；
+                最后一步    安装好依赖后就可以正常启动，那么问题来了。 unity桌面无任务栏图标，如何解决？找了很久，找到了一个折衷的方案。
+        请添加一个systemtray源，然后安装indicator-systemtray-unity，命令如下：
+sudo apt-add-repository ppa:fixnix/indicator-systemtray-unity
+sudo apt-get update
+sudo apt-get install indicator-systemtray-unity
+        重启后即可解决unity桌面无任务栏图标的问题。

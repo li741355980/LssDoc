@@ -131,7 +131,7 @@ public class DLPluginManager {
 
         DLPluginPackage pluginPackage = preparePluginEnv(packageInfo, dexPath);
         if (hasSoLib) {
-            copySoLib(dexPath);
+            copySoLib(dexPath);//必须将库放在具有执行权限的文件夹下面
         }
 
         return pluginPackage;

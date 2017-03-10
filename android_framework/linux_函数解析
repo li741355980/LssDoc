@@ -1,0 +1,91 @@
+1 ioctl
+
+ioctl是设备驱动程序中对设备的I/O通道进行管理的函数。所谓对I/O通道进行管理，就是对设备的一些特性进行控制，例如串口的传输波特率、马达的转速等等。它的参数个数如下：int ioctl(int fd, int cmd, …)；其中fd就是用户程序打开设备时使用open函数返回的文件标示符，cmd就是用户程序对设备的控制命令，至于后面的省略号，那是一些补充参数，一般最多一个，有或没有是和cmd的意义相关的。
+
+static int open_driver()
+
+{
+
+    int fd = open("/dev/binder", O_RDWR);//打开/dev/binder
+
+    if (fd >= 0) {
+
+      ....
+
+        size_t maxThreads = 15;
+
+       //通过ioctl方式告诉内核，这个fd支持最大线程数是15个。
+
+        result = ioctl(fd, BINDER_SET_MAX_THREADS, &maxThreads);    }
+
+	return fd;
+}
+
+2 fcntl
+fcntl函数可以改变已打开的文件性质
+定义函数 
+int fcntl(int fd, int cmd); 
+int fcntl(int fd, int cmd, long arg); 
+int fcntl(int fd, int cmd, struct flock *lock);
+fcntl()针对(文件)描述符提供控制.参数fd 是被参数cmd操作(如下面的描述)的描述符.
+　　参数cmd有以下几种情况:
+F_DUPFD用来查找大于或等于参数arg的最小且仍未使用的文件描述符，并且复制参数fd的文件描述符。执行成功则返回新复制的文件描述符。新描述符与fd共享同一文件表项，但是新描述符有它自己的一套文件描述符标志，其中FD_CLOEXEC文件描述符标志被清除。请参考dup2()。
+F_GETFD取得close-on-exec旗标。若此旗标的FD_CLOEXEC位为0，代表在调用exec()相关函数时文件将不会关闭。
+F_SETFD 设置close-on-exec 旗标。该旗标以参数arg 的FD_CLOEXEC位决定。
+F_GETFL 取得文件描述符状态旗标，此旗标为open（）的参数flags。
+F_SETFL 设置文件描述符状态旗标，参数arg为新旗标，但只允许O_APPEND、O_NONBLOCK和O_ASYNC位的改变，其他位的改变将不受影响。
+F_GETLK 取得文件锁定的状态。
+F_SETLK 设置文件锁定的状态。此时flcok 结构的l_type 值必须是F_RDLCK、F_WRLCK或F_UNLCK。如果无法建立锁定，则返回-1，错误代码为EACCES 或EAGAIN。
+F_SETLKW F_SETLK 作用相同，但是无法建立锁定时，此调用会一直等到锁定动作成功为止。若在等待锁定的过程中被信号中断时，会立即返回-1，错误代码为EINTR。
+
+
+例子：
+ 1 fcntl(fd, F_SETFD, FD_CLOEXEC);
+设置FD_CLOEXEC标志，该标志表示使用execl执行的程序里，此描述符被关闭，不能再使用它，但是在使用fork调用的子进程中，此描述符并不关闭，仍可使用。
+
+int main(void)
+{
+        int fd,pid;
+        char buffer[20];
+        fd=open("wo.txt",O_RDONLY);
+        printf("%d/n",fd);
+        int val=fcntl(fd,F_GETFD);
+        val|=FD_CLOEXEC;
+        fcntl(fd,F_SETFD,val);
+
+        pid=fork();
+        if(pid==0)
+        {
+                //子进程中，此描述符并不关闭，仍可使用
+                char child_buf[2];
+                memset(child_buf,0,sizeof(child_buf) );
+                ssize_t bytes = read(fd,child_buf,sizeof(child_buf)-1 );
+                printf("child, bytes:%d,%s/n/n",bytes,child_buf);
+
+                //execl执行的程序里，此描述符被关闭，不能再使用它
+                char fd_str[5];
+                memset(fd_str,0,sizeof(fd_str));
+                sprintf(fd_str,"%d",fd);
+                int ret = execl("./exe1","exe1",fd_str,NULL);
+                if(-1 == ret)
+                        perror("ececl fail:");
+        }        
+
+        waitpid(pid,NULL,0);
+        memset(buffer,0,sizeof(buffer) );
+        ssize_t bytes = read(fd,buffer,sizeof(buffer)-1 );
+        printf("parent, bytes:%d,%s/n/n",bytes,buffer);
+}
+
+2  设置socket为阻塞或者非阻塞模式
+
+bool NetSocketBuilder::setNoBlockFlag(bool noblock){
+    int x=fcntl(mSocket,F_GETFL,0);              // Get socket flags
+    if(noblock){
+        fcntl(mSocket,F_SETFL,x | O_NONBLOCK);   // Add non-blocking flag
+    }else{
+        fcntl(mSocket,F_SETFL,x & (~O_NONBLOCK));   // Add non-blocking flag
+    }
+    return true;
+}
+

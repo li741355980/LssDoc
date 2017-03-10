@@ -1,0 +1,66 @@
+1 写文件
+def srcFile = new File(源文件名)  
+def targetFile = new File(目标文件名)  
+targetFile.withOutputStream{ os->  
+srcFile.withInputStream{ ins->  
+       os << ins   //利用OutputStream的<<操作符重载，完成从inputstream到OutputStream 的输出  
+    }  
+}  
+
+2 xml操作
+1. test.xml文件：  
+2. <response version-api="2.0">  
+3.        <value>  
+4.            <books>  
+5.                <book available="20" id="1">  
+6.                    <title>Don Xijote</title>  
+7.                    <author id="1">Manuel De Cervantes</author>  
+8.                </book>  
+9.                <book available="14" id="2">  
+10.                    <title>Catcher in the Rye</title>  
+11.                   <author id="2">JD Salinger</author>  
+12.               </book>  
+13.               <book available="13" id="3">  
+14.                   <title>Alice in Wonderland</title>  
+15.                   <author id="3">Lewis Carroll</author>  
+16.               </book>  
+17.               <book available="5" id="4">  
+18.                   <title>Don Xijote</title>  
+19.                   <author id="4">Manuel De Cervantes</author>  
+20.               </book>  
+21.            </books>  
+22.       </value>  
+23.    </response>  
+
+
+//第一步，创建XmlSlurper类  
+ def xparser = new XmlSlurper()  
+ def targetFile = new File("test.xml")  
+ //轰轰的GPath出场  
+ GPathResult gpathResult =xparser.parse(targetFile)      
+ //开始玩test.xml。现在我要访问id=4的book元素。  
+ //下面这种搞法，gpathResult代表根元素response。通过e1.e2.e3这种  
+ //格式就能访问到各级子元素....  
+ def book4 = gpathResult.value.books.book[3]  
+ //得到book4的author元素  
+ def author = book4.author  
+ //再来获取元素的属性和textvalue  
+ assert author.text() == ' Manuel De Cervantes '  
+ 获取属性更直观  
+ author.@id == '4' 或者 author['@id'] == '4'  
+ 属性一般是字符串，可通过toInteger转换成整数  
+ author.@id.toInteger() == 4  
+ 好了。GPath就说到这。再看个例子。我在使用Gradle的时候有个需求，就是获取AndroidManifest.xml版本号（versionName）。有了GPath，一行代码搞定，请看：  
+ def androidManifest = newXmlSlurper().parse("AndroidManifest.xml")  
+ println androidManifest['@android:versionName']  
+ 或者  
+ println androidManifest.@'android:versionName'  
+
+
+
+
+
+
+
+
+

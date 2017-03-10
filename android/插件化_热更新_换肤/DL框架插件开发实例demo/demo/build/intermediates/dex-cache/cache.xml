@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-host/build/intermediates/exploded-aar/demo/lib/unspecified/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="42425a5205f3c704a793745d890e763c9da0892c">
+        <dex dex="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-host/build/intermediates/pre-dexed/debug/demo-lib-unspecified_714c03a4cda865c3a353720ecfd94fe703f9bec1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-plugin-b/libs/android-support-v4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="19.1.0"
+        sha1="5896b0a4e377ac4242eb2bc785220c1c4fc052f4">
+        <dex dex="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-plugin-b/build/intermediates/pre-dexed/debug/android-support-v4_99646d65abbf057ddf57b1665e9764de7f676e19.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-host/build/intermediates/exploded-aar/demo/lib/unspecified/jars/libs/android-support-v4.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="e1011b1282908db745a6bce3f2f99c82bffab021">
+        <dex dex="/media/lss/else/lss_doc/android/插件化_热更新_换肤/DL框架插件开发实例demo/demo/main-host/build/intermediates/pre-dexed/debug/android-support-v4_ace689aa0a720d22d551d2802cc34c749a5045f0.jar" />
+    </item>
+
+</items>

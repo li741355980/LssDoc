@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
         for (File plugin : plugins) {
             PluginItem item = new PluginItem();
             item.pluginPath = plugin.getAbsolutePath();
+
             item.packageInfo = DLUtils.getPackageInfo(this, item.pluginPath);
 
             if (item.packageInfo.activities != null
@@ -80,6 +81,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
                 item.launcherServiceName = item.packageInfo.services[0].name;
             }
             mPluginItems.add(item);
+
             DLPluginManager.getInstance(this).loadApk(item.pluginPath);
         }
 
@@ -177,9 +179,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         PluginItem item = mPluginItems.get(position);
+
         DLPluginManager pluginManager = DLPluginManager.getInstance(this);
+
         Log.e("onitemclick","packageName "+item.packageInfo.packageName
         +" launcherActivityName "+item.launcherActivityName);
+
         pluginManager.startPluginActivity(this, new DLIntent(item.packageInfo.packageName, item.launcherActivityName));
         
         //如果存在Service则调用起Service
